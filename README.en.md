@@ -9,8 +9,8 @@
 
 <p align="center">
   <a href="README.md">Français</a> ·
-  <a href="https://byyose.github.io/scrappydev_tv/">Interactive documentation FR / EN</a> ·
-  <a href="https://github.com/ByYoSe/scrappydev_tv/releases/latest">Download</a>
+  <a href="https://scrappyoff.github.io/scrappydev_tv/">Interactive documentation FR / EN</a> ·
+  <a href="https://github.com/Scrappyoff/scrappydev_tv/releases/latest">Download</a>
 </p>
 
 ## Features
@@ -30,7 +30,7 @@ TV state is stored in server memory. It resets when the resource restarts; confi
 
 Use a FiveM server with OneSync for server-side player coordinates and routing buckets. **`ox_lib` is required**, including in standalone mode. Frameworks, inventories and `ox_target` are optional integrations.
 
-1. Download **`scrappydev_tv-v1.0.0.zip`** from the [latest release](https://github.com/ByYoSe/scrappydev_tv/releases/latest).
+1. Download **`scrappydev_tv-v1.0.0.zip`** from the [latest release](https://github.com/Scrappyoff/scrappydev_tv/releases/latest).
 2. Extract the `scrappydev_tv` folder into your server's resources directory.
 3. Start your dependencies before the resource in `server.cfg`:
 
@@ -53,7 +53,7 @@ Use a FiveM server with OneSync for server-side player coordinates and routing b
 Alternatively, clone the repository from your resources directory:
 
 ```bash
-git clone https://github.com/ByYoSe/scrappydev_tv.git scrappydev_tv
+git clone https://github.com/Scrappyoff/scrappydev_tv.git scrappydev_tv
 ```
 
 > If using GitHub's **Code → Download ZIP**, rename `scrappydev_tv-main` to **`scrappydev_tv`**. Inventory snippets and export examples use this resource name.
@@ -156,20 +156,20 @@ local success = exports['scrappydev_tv']:PlayVideoOnTelevision(
 )
 ```
 
-See the [export reference](https://byyose.github.io/scrappydev_tv/#dev-api) for `StartTelevision`, `ChangeVolumeTelevision`, `StopTelevision` and `useRemote`. `HasVehicleTV()` is a compatibility stub returning `false`; vehicle TVs are not implemented.
+See the [export reference](https://scrappyoff.github.io/scrappydev_tv/#dev-api) for `StartTelevision`, `ChangeVolumeTelevision`, `StopTelevision` and `useRemote`. `HasVehicleTV()` is a compatibility stub returning `false`; vehicle TVs are not implemented.
 
 ## Documentation and support
 
-Open the [interactive documentation](https://byyose.github.io/scrappydev_tv/) online, or open `docs/index.html` in a browser after downloading the project. The documentation includes every setting, supported TV props, exports and troubleshooting.
+Open the [interactive documentation](https://scrappyoff.github.io/scrappydev_tv/) online, or open `docs/index.html` in a browser after downloading the project. The documentation includes every setting, supported TV props, exports and troubleshooting.
 
-For bugs, [open an issue](https://github.com/ByYoSe/scrappydev_tv/issues) with the framework, resource version, TV model, reproduction steps and relevant server / F8 errors. Remove private data first. See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
+For bugs, [open an issue](https://github.com/Scrappyoff/scrappydev_tv/issues) with the framework, resource version, TV model, reproduction steps and relevant server / F8 errors. Remove private data first. See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
 
-Before updating, back up `config.lua` and your locales, install the new files, merge new settings and run `restart scrappydev_tv`. See [CHANGELOG.md](CHANGELOG.md) and [releases](https://github.com/ByYoSe/scrappydev_tv/releases).
+Before updating, back up `config.lua` and your locales, install the new files, merge new settings and run `restart scrappydev_tv`. See [CHANGELOG.md](CHANGELOG.md) and [releases](https://github.com/Scrappyoff/scrappydev_tv/releases).
 
-The optional version check is **disabled by default**. To enable it, set `Config.VersionCheck.enabled = true` and `Config.VersionCheck.url = 'https://raw.githubusercontent.com/ByYoSe/scrappydev_tv/main/version.json'`. It prints update notices without downloading or replacing files.
+The optional version check is **disabled by default**. To enable it, set `Config.VersionCheck.enabled = true` and `Config.VersionCheck.url = 'https://raw.githubusercontent.com/Scrappyoff/scrappydev_tv/main/version.json'`. It prints update notices without downloading or replacing files.
 
 ---
 
-Created by **Scrappy.Dev** · Source published by [ByYoSe](https://github.com/ByYoSe).
+Created by **Scrappy.Dev** · Source published by [Scrappyoff](https://github.com/Scrappyoff).
 
 This repository contains readable source code. No open-source license is declared for this release.

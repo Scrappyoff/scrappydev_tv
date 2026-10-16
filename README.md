@@ -16,8 +16,8 @@
 
 <p align="center">
   <a href="#installation">Installation</a> ·
-  <a href="https://byyose.github.io/scrappydev_tv/">Documentation interactive FR / EN</a> ·
-  <a href="https://github.com/ByYoSe/scrappydev_tv/releases/latest">Télécharger</a> ·
+  <a href="https://scrappyoff.github.io/scrappydev_tv/">Documentation interactive FR / EN</a> ·
+  <a href="https://github.com/Scrappyoff/scrappydev_tv/releases/latest">Télécharger</a> ·
   <a href="README.en.md">English</a>
 </p>
 
@@ -54,7 +54,7 @@ L'état des télévisions reste en mémoire : aucune base de données propre au 
 
 ### 2. Installer la ressource
 
-Téléchargez **`scrappydev_tv-v1.0.0.zip`** depuis les [releases](https://github.com/ByYoSe/scrappydev_tv/releases/latest), puis extrayez le dossier dans vos ressources :
+Téléchargez **`scrappydev_tv-v1.0.0.zip`** depuis les [releases](https://github.com/Scrappyoff/scrappydev_tv/releases/latest), puis extrayez le dossier dans vos ressources :
 
 ```text
 resources/
@@ -70,7 +70,7 @@ resources/
 Vous pouvez aussi cloner le dépôt depuis votre dossier de ressources :
 
 ```bash
-git clone https://github.com/ByYoSe/scrappydev_tv.git scrappydev_tv
+git clone https://github.com/Scrappyoff/scrappydev_tv.git scrappydev_tv
 ```
 
 > Avec le ZIP automatique **Code → Download ZIP** de GitHub, renommez `scrappydev_tv-main` en **`scrappydev_tv`**. Les exemples d'inventaire et d'exports utilisent ce nom.
@@ -231,7 +231,7 @@ end
 -- exports['scrappydev_tv']:StopTelevision(coords, bucket)
 ```
 
-La [documentation interactive](https://byyose.github.io/scrappydev_tv/#dev-api) décrit les signatures complètes, `StartTelevision`, `useRemote` et les événements de compatibilité. `HasVehicleTV()` est un export de compatibilité qui renvoie `false` : les télévisions embarquées ne sont pas implémentées.
+La [documentation interactive](https://scrappyoff.github.io/scrappydev_tv/#dev-api) décrit les signatures complètes, `StartTelevision`, `useRemote` et les événements de compatibilité. `HasVehicleTV()` est un export de compatibilité qui renvoie `false` : les télévisions embarquées ne sont pas implémentées.
 
 ## Structure du projet
 
@@ -255,16 +255,16 @@ scrappydev_tv/
 - **Target ou objet absent :** vérifiez la configuration, la définition d'inventaire et l'ordre de démarrage.
 - **Site muet, bloqué ou non synchronisé :** essayez un média direct ; les lecteurs web externes ont leurs propres restrictions.
 
-Pour signaler un problème, ouvrez une [issue](https://github.com/ByYoSe/scrappydev_tv/issues) avec votre framework, les erreurs serveur / F8, le modèle de TV et les étapes de reproduction. Retirez les identifiants et données privées des journaux.
+Pour signaler un problème, ouvrez une [issue](https://github.com/Scrappyoff/scrappydev_tv/issues) avec votre framework, les erreurs serveur / F8, le modèle de TV et les étapes de reproduction. Retirez les identifiants et données privées des journaux.
 
-Consultez le [changelog](CHANGELOG.md) et les [releases](https://github.com/ByYoSe/scrappydev_tv/releases). Avant une mise à jour, sauvegardez `config.lua` et vos traductions, remplacez les fichiers, reportez les nouvelles options puis exécutez `restart scrappydev_tv`.
+Consultez le [changelog](CHANGELOG.md) et les [releases](https://github.com/Scrappyoff/scrappydev_tv/releases). Avant une mise à jour, sauvegardez `config.lua` et vos traductions, remplacez les fichiers, reportez les nouvelles options puis exécutez `restart scrappydev_tv`.
 
-La vérification de version est **désactivée par défaut**. Pour l'activer, utilisez `Config.VersionCheck.enabled = true` et l'URL `https://raw.githubusercontent.com/ByYoSe/scrappydev_tv/main/version.json`. Elle affiche une notification dans la console serveur sans télécharger ni remplacer les fichiers.
+La vérification de version est **désactivée par défaut**. Pour l'activer, utilisez `Config.VersionCheck.enabled = true` et l'URL `https://raw.githubusercontent.com/Scrappyoff/scrappydev_tv/main/version.json`. Elle affiche une notification dans la console serveur sans télécharger ni remplacer les fichiers.
 
 La documentation fonctionne aussi hors ligne : ouvrez [`docs/index.html`](docs/index.html) dans votre navigateur après téléchargement. Pour proposer une amélioration, consultez [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-<p align="center">Créé par <b>Scrappy.Dev</b> · Code source publié par <a href="https://github.com/ByYoSe">ByYoSe</a></p>
+<p align="center">Créé par <b>Scrappy.Dev</b> · Code source publié par <a href="https://github.com/Scrappyoff">Scrappyoff</a></p>
 
 Le dépôt contient le code source lisible. Aucune licence open source n'est déclarée dans cette version.

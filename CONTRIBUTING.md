@@ -1,6 +1,6 @@
 # Contribuer à Scrappy.Dev TV
 
-Les suggestions et signalements sont suivis dans les [issues](https://github.com/ByYoSe/scrappydev_tv/issues).
+Les suggestions et signalements sont suivis dans les [issues](https://github.com/Scrappyoff/scrappydev_tv/issues).
 
 ## Signaler un bug
 
