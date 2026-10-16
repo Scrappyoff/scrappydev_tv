@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrappy.Dev TV — Documentation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="lang" role="group" aria-label="Language">
+    <button data-setlang="en" class="on">EN</button><button data-setlang="fr">FR</button>
+  </div>
+  <button class="burger" id="burger" aria-label="Menu">☰</button>
+  <div class="brand"><span class="dot"></span><span class="b1">SCRAPPY.DEV</span><b>TV</b></div>
+  <div class="progress">
+    <div class="ptext"><span class="en">Setup progress</span><span class="fr">Avancement</span> <b id="pcount">0/0</b></div>
+    <div class="bar"><i id="bar"></i></div>
+    <span id="pct">0%</span>
+    <button id="reset" class="ghost"><span class="en">Reset</span><span class="fr">Réinitialiser</span></button>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="side" id="side">
+  <div class="grp"><span class="en">Getting started</span><span class="fr">Démarrage</span></div>
+  <a href="#overview"><span class="en">Overview</span><span class="fr">Présentation</span></a>
+  <a href="#requirements"><span class="en">1 · Requirements</span><span class="fr">1 · Prérequis</span></a>
+  <a href="#install"><span class="en">2 · Copy the resource</span><span class="fr">2 · Copier la ressource</span></a>
+  <a href="#items"><span class="en">3 · Remote item &amp; icon</span><span class="fr">3 · Objet télécommande</span></a>
+  <a href="#servercfg">4 · server.cfg</a>
+  <a href="#firststart"><span class="en">5 · First test</span><span class="fr">5 · Premier test</span></a>
+  <a href="#using"><span class="en">6 · Using the TV</span><span class="fr">6 · Utiliser la télé</span></a>
+  <a href="#config"><span class="en">7 · Configuration</span><span class="fr">7 · Configuration</span></a>
+  <a href="#screens"><span class="en">8 · Custom screens</span><span class="fr">8 · Écrans personnalisés</span></a>
+  <div class="grp"><span class="en">Reference</span><span class="fr">Référence</span></div>
+  <a href="#config-ref"><span class="en">All settings</span><span class="fr">Tous les réglages</span></a>
+  <a href="#models"><span class="en">Supported TV props</span><span class="fr">Props de TV gérés</span></a>
+  <a href="#links"><span class="en">Supported links</span><span class="fr">Liens pris en charge</span></a>
+  <a href="#keys"><span class="en">Remote keys</span><span class="fr">Touches de la télécommande</span></a>
+  <a href="#commands"><span class="en">Commands &amp; permissions</span><span class="fr">Commandes et permissions</span></a>
+  <a href="#howitworks"><span class="en">How it works</span><span class="fr">Fonctionnement</span></a>
+  <div class="grp"><span class="en">Developers</span><span class="fr">Développeurs</span></div>
+  <a href="#dev-api"><span class="en">Exports</span><span class="fr">Exports</span></a>
+  <a href="#dev-events"><span class="en">Events</span><span class="fr">Évènements</span></a>
+  <a href="#dev-arch"><span class="en">Architecture &amp; safety</span><span class="fr">Architecture et sécurité</span></a>
+  <div class="grp"><span class="en">Help</span><span class="fr">Aide</span></div>
+  <a href="#faq"><span class="en">Troubleshooting</span><span class="fr">Dépannage</span></a>
+  <a href="#updates"><span class="en">Updates</span><span class="fr">Mises à jour</span></a>
+  <a href="#limits"><span class="en">Good to know</span><span class="fr">À savoir</span></a>
+</nav>
+
+<main>
+
+<!-- ============================================================ OVERVIEW -->
+<section id="overview" class="hero">
+  <h1><span class="en">Scrappy.Dev TV</span><span class="fr">Scrappy.Dev TV</span></h1>
+  <p class="lead en">Synchronized televisions for FiveM. Players walk up to any supported TV, open a remote, and play a YouTube video, a stream, a video file or even browse a website with the mouse. Everyone near the screen sees and hears the same thing at the same second. Installation takes about 5 minutes.</p>
+  <p class="lead fr">Des télévisions synchronisées pour FiveM. Les joueurs s'approchent d'une télé compatible, ouvrent une télécommande et lancent une vidéo YouTube, un flux, un fichier vidéo ou naviguent même sur un site à la souris. Toutes les personnes proches voient et entendent la même chose, à la même seconde. L'installation prend environ 5 minutes.</p>
+  <div class="pipeline">
+    <div class="node"><b><span class="en">Remote</span><span class="fr">Télécommande</span></b><small class="en">/tv · item · target</small><small class="fr">/tv · objet · target</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b><span class="en">Server</span><span class="fr">Serveur</span></b><small class="en">checks and stores the state</small><small class="fr">vérifie et garde l'état</small></div>
+    <div class="arrow">→</div>
+    <div class="node"><b><span class="en">Everyone nearby</span><span class="fr">Tout le monde autour</span></b><small class="en">same video, same second</small><small class="fr">même vidéo, même seconde</small></div>
+    <div class="arrow">→</div>
+    <div class="node pay"><b><span class="en">Screen</span><span class="fr">Écran</span></b><small class="en">TV prop or custom screen</small><small class="fr">prop de télé ou écran perso</small></div>
+  </div>
+  <div class="chips">
+    <span class="chip">QBCore</span><span class="chip">QBX</span><span class="chip">ESX</span><span class="chip">ox_core</span><span class="chip">Standalone</span>
+    <span class="chip">ox_lib</span><span class="chip">ox_target</span><span class="chip">ox_inventory</span><span class="chip">qb-inventory</span>
+    <span class="chip">YouTube</span><span class="chip">Twitch</span><span class="chip">HLS · MP4</span>
+    <span class="chip en">English · Français</span><span class="chip fr">Français · English</span>
+  </div>
+  <div class="cols">
+    <div class="col"><b><span class="en">Synchronized</span><span class="fr">Synchronisé</span></b><p class="en">The server keeps one clock per TV. Pause, seek or join late: everybody lands on the same second.</p><p class="fr">Le serveur garde une horloge par télé. Pause, avance ou arrivée tardive : tout le monde retombe sur la même seconde.</p></div>
+    <div class="col"><b><span class="en">A real remote</span><span class="fr">Une vraie télécommande</span></b><p class="en">Channels with numbers, color keys, volume, mute, guide, apps and a full address bar. Keyboard shortcuts included.</p><p class="fr">Chaînes numérotées, touches de couleur, volume, muet, guide, applications et barre d'adresse. Raccourcis clavier inclus.</p></div>
+    <div class="col"><b><span class="en">Mouse browsing</span><span class="fr">Navigation à la souris</span></b><p class="en">Open any website on the screen, click and scroll. One player drives, the others watch the same page.</p><p class="fr">Ouvrez n'importe quel site sur l'écran, cliquez et défilez. Un joueur pilote, les autres voient la même page.</p></div>
+    <div class="col"><b><span class="en">Server validation</span><span class="fr">Validation serveur</span></b><p class="en">Player controls are checked for links, keys, distance and permissions. Literal IP addresses and several local suffixes are rejected; DNS and redirects are not inspected.</p><p class="fr">Les actions des joueurs sont vérifiées : liens, touches, distance et permissions. Les IP littérales et plusieurs suffixes locaux sont refusés ; les DNS et redirections ne sont pas inspectés.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ 1 REQUIREMENTS -->
+<section id="requirements">
+  <h2><span class="num">1</span><span class="en">Requirements</span><span class="fr">Prérequis</span></h2>
+  <p class="en">Only one dependency is mandatory. Everything else is optional and detected automatically.</p>
+  <p class="fr">Une seule dépendance est obligatoire. Tout le reste est optionnel et détecté automatiquement.</p>
+  <div class="checks">
+    <label><input type="checkbox" data-id="req-oxlib"><span><b>ox_lib</b> <span class="badge req"><span class="en">required</span><span class="fr">obligatoire</span></span> <i class="en">— needed even without a framework (server callbacks and fallback notifications)</i><i class="fr">— nécessaire même sans framework (callbacks serveur et notifications de secours)</i></span></label>
+    <label><input type="checkbox" data-id="req-framework"><span><b>QBCore · QBX · ESX · ox_core</b> <span class="badge opt"><span class="en">optional</span><span class="fr">optionnel</span></span> <i class="en">— used for job checks, character names and the usable remote item. Standalone works too.</i><i class="fr">— utilisé pour les métiers, les noms de personnage et l'objet télécommande. Le mode standalone fonctionne aussi.</i></span></label>
+    <label><input type="checkbox" data-id="req-target"><span><b>ox_target</b> <span class="badge opt"><span class="en">optional</span><span class="fr">optionnel</span></span> <i class="en">— only if you want an eye/target interaction on TVs (<code>Config.Access.target</code>)</i><i class="fr">— seulement si vous voulez une interaction « œil » sur les télés (<code>Config.Access.target</code>)</i></span></label>
+    <label><input type="checkbox" data-id="req-inventory"><span><b>ox_inventory · qb-inventory · ESX</b> <span class="badge opt"><span class="en">optional</span><span class="fr">optionnel</span></span> <i class="en">— only if players need a remote item</i><i class="fr">— seulement si les joueurs doivent avoir un objet télécommande</i></span></label>
+  </div>
+  <p class="note en">Use OneSync for server-side player coordinates and routing buckets. No resource-specific database is required: TV state lives in server memory and resets on restart.</p>
+  <p class="note fr">Utilisez OneSync pour les coordonnées des joueurs et les routing buckets côté serveur. Aucune base de données propre au script n'est requise : l'état des télés reste en mémoire et se réinitialise au redémarrage.</p>
+</section>
+
+<!-- ============================================================ 2 INSTALL -->
+<section id="install">
+  <h2><span class="num">2</span><span class="en">Copy the resource</span><span class="fr">Copier la ressource</span></h2>
+  <div class="checks">
+    <label><input type="checkbox" data-id="copy-folder"><span><i class="en">Put the <code>scrappydev_tv</code> folder inside your server's <code>resources</code> folder. <b>Do not rename it</b>: exports and the screen player use this exact name.</i><i class="fr">Placez le dossier <code>scrappydev_tv</code> dans le dossier <code>resources</code> de votre serveur. <b>Ne le renommez pas</b> : les exports et le lecteur d'écran utilisent ce nom exact.</i></span></label>
+  </div>
+  <p class="note en">There is nothing to import: no SQL, no build step. The interface is already included.</p>
+  <p class="note fr">Rien à importer : pas de SQL, rien à compiler. L'interface est déjà incluse.</p>
+</section>
+
+<!-- ============================================================ 3 ITEMS -->
+<section id="items">
+  <h2><span class="num">3</span><span class="en">Remote item &amp; icon</span><span class="fr">Objet télécommande</span> <span class="badge opt"><span class="en">optional</span><span class="fr">optionnel</span></span></h2>
+  <p class="en">By default players simply type <code>/tv</code> next to a TV, so <b>you can skip this step</b>. Add the item if you want players to open the remote from their inventory, or to <b>require</b> a remote to control TVs (set <code>Config.Access.item = 'tv_remote'</code> and <code>itemRequired = true</code>).</p>
+  <p class="fr">Par défaut, les joueurs tapent simplement <code>/tv</code> à côté d'une télé : <b>vous pouvez passer cette étape</b>. Ajoutez l'objet si vous voulez que les joueurs ouvrent la télécommande depuis leur inventaire, ou si vous voulez <b>exiger</b> une télécommande pour contrôler les télés (<code>Config.Access.item = 'tv_remote'</code> et <code>itemRequired = true</code>).</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-tab="ox">ox_inventory</button>
+    <button class="tab" data-tab="qb">QBCore / QBX</button>
+    <button class="tab" data-tab="esx">ESX</button>
+    <button class="tab" data-tab="none"><span class="en">No inventory</span><span class="fr">Sans inventaire</span></button>
+  </div>
+
+  <div class="pane on" data-pane="ox">
+    <ol class="how">
+      <li class="en">Open <code>ox_inventory/data/items.lua</code>.</li><li class="fr">Ouvrez <code>ox_inventory/data/items.lua</code>.</li>
+      <li class="en">Paste the block below <b>inside</b> the returned table.</li><li class="fr">Collez le bloc ci-dessous <b>dans</b> la table retournée.</li>
+      <li class="en">Copy the icon into <code>ox_inventory/web/images</code> and restart ox_inventory.</li><li class="fr">Copiez l'icône dans <code>ox_inventory/web/images</code> et redémarrez ox_inventory.</li>
+    </ol>
+    <figure class="code" data-lang="lua"><figcaption><span class="file">ox_inventory/data/items.lua</span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>-- Add this entry INSIDE the table returned by ox_inventory/data/items.lua.
+-- Copy install/images/tv_remote.png into ox_inventory/web/images.
+-- The remote is optional: it is only needed when Config.Access.itemRequired = true,
+-- or if you simply want players to open the remote from their inventory.
+[&#39;tv_remote&#39;] = {
+    label = &quot;TV Remote&quot;, weight = 100, stack = true, close = true, consume = 0,
+    description = &quot;Controls the television next to you.&quot;,
+    client = { image = &#39;tv_remote.png&#39;, event = &#39;scrappydev_tv:client:useRemote&#39; },
+},</code></pre></figure>
+    <p class="note en">The item triggers the client event <code>scrappydev_tv:client:useRemote</code>; nothing else to connect.</p>
+    <p class="note fr">L'objet déclenche l'évènement client <code>scrappydev_tv:client:useRemote</code> ; rien d'autre à brancher.</p>
+  </div>
+
+  <div class="pane" data-pane="qb">
+    <ol class="how">
+      <li class="en">Open <code>qb-core/shared/items.lua</code>.</li><li class="fr">Ouvrez <code>qb-core/shared/items.lua</code>.</li>
+      <li class="en">Paste the block below inside <code>QBCore.Shared.Items</code> (QBX: your items file).</li><li class="fr">Collez le bloc ci-dessous dans <code>QBCore.Shared.Items</code> (QBX : votre fichier d'objets).</li>
+      <li class="en">Copy the icon into <code>qb-inventory/html/images</code>. The usable item registers itself.</li><li class="fr">Copiez l'icône dans <code>qb-inventory/html/images</code>. L'objet utilisable s'enregistre tout seul.</li>
+    </ol>
+    <figure class="code" data-lang="lua"><figcaption><span class="file">qb-core/shared/items.lua</span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>-- Add inside QBCore.Shared.Items (QBX: your items file). Copy install/images/tv_remote.png into qb-inventory/html/images.
+-- The usable item is registered automatically by the resource when Config.Access.item = &#39;tv_remote&#39;.
+tv_remote = { name=&#39;tv_remote&#39;, label=&quot;TV Remote&quot;, weight=100, type=&#39;item&#39;, image=&#39;tv_remote.png&#39;, unique=false, useable=true, shouldClose=true, description=&quot;Controls the television next to you.&quot; },</code></pre></figure>
+  </div>
+
+  <div class="pane" data-pane="esx">
+    <ol class="how">
+      <li class="en">Run the SQL below on your database (HeidiSQL, phpMyAdmin…). Native ESX inventory only — do <b>not</b> import it with ox_inventory.</li>
+      <li class="fr">Exécutez le SQL ci-dessous sur votre base (HeidiSQL, phpMyAdmin…). Inventaire ESX natif uniquement — ne l'importez <b>pas</b> avec ox_inventory.</li>
+      <li class="en">Copy the icon into your inventory's image folder. The usable item registers itself.</li><li class="fr">Copiez l'icône dans le dossier d'images de votre inventaire. L'objet utilisable s'enregistre tout seul.</li>
+    </ol>
+    <figure class="code" data-lang="sql"><figcaption><span class="file">install/esx_items.sql</span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>-- Native ESX inventory only, items(name, label, weight) schema. Do NOT import this with ox_inventory.
+INSERT INTO items (name,label,weight) VALUES
+(&#39;tv_remote&#39;,&#39;TV Remote&#39;,100)
+ON DUPLICATE KEY UPDATE label=VALUES(label),weight=VALUES(weight);</code></pre></figure>
+  </div>
+
+  <div class="pane" data-pane="none">
+    <p class="en">No item to create. Keep <code>Config.Access.item = false</code>: players use <code>/tv</code> or the target. If you build your own inventory, call the server export <code>exports.scrappydev_tv:useRemote(source)</code> from your item-use code.</p>
+    <p class="fr">Aucun objet à créer. Gardez <code>Config.Access.item = false</code> : les joueurs utilisent <code>/tv</code> ou le target. Si vous avez votre propre inventaire, appelez l'export serveur <code>exports.scrappydev_tv:useRemote(source)</code> depuis le code d'utilisation de votre objet.</p>
+  </div>
+
+  <h3><span class="en">Icon</span><span class="fr">Icône</span></h3>
+  <p class="en">Transparent PNG, in <code>install/images</code>. Click the item name to copy it.</p>
+  <p class="fr">PNG transparent, dans <code>install/images</code>. Cliquez sur le nom de l'objet pour le copier.</p>
+  <div class="icons">
+    <div class="icon"><div class="img"><img src="../install/images/tv_remote.png" alt="tv_remote"></div><button class="name" data-copytext="tv_remote">tv_remote</button><small class="en">Remote control</small><small class="fr">Télécommande</small></div>
+  </div>
+
+  <div class="checks">
+    <label><input type="checkbox" data-id="items-defs"><span><i class="en">Item definition added to my inventory (or skipped on purpose)</i><i class="fr">Définition d'objet ajoutée à mon inventaire (ou ignorée volontairement)</i></span></label>
+    <label><input type="checkbox" data-id="items-icons"><span><i class="en">Icon copied into my inventory's image folder</i><i class="fr">Icône copiée dans le dossier d'images de mon inventaire</i></span></label>
+  </div>
+</section>
+
+<!-- ============================================================ 4 SERVER.CFG -->
+<section id="servercfg">
+  <h2><span class="num">4</span>server.cfg</h2>
+  <p class="en">Start <code>ox_lib</code> and your optional resources <b>before</b> the TV.</p>
+  <p class="fr">Démarrez <code>ox_lib</code> et vos ressources optionnelles <b>avant</b> la télé.</p>
+  <figure class="code" data-lang="cfg"><figcaption><span class="file">server.cfg</span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code># Start order matters: library first, then your framework / inventory / target, then the TV.
+ensure ox_lib
+# ensure ox_target        # only if Config.Access.target = true
+# ensure ox_inventory     # or qb-inventory / your ESX inventory (only if you use the remote item)
+ensure scrappydev_tv
+
+# Optional: restrict who can control TVs (Config.Permissions.enabled = true).
+# add_ace group.admin scrappydev_tv.control allow
+
+# /tvcalib is a client-local calibration tool; it does not enforce a server ACE.</code></pre></figure>
+  <p class="note en">Lines starting with <code>#</code> are optional. Remove the <code>#</code> only for the features you use.</p>
+  <p class="note fr">Les lignes qui commencent par <code>#</code> sont optionnelles. Retirez le <code>#</code> seulement pour les fonctions que vous utilisez.</p>
+  <div class="checks"><label><input type="checkbox" data-id="cfg-lines"><span><i class="en">Lines added to server.cfg</i><i class="fr">Lignes ajoutées dans server.cfg</i></span></label></div>
+</section>
+
+<!-- ============================================================ 5 FIRST TEST -->
+<section id="firststart">
+  <h2><span class="num">5</span><span class="en">First test</span><span class="fr">Premier test</span></h2>
+  <ol class="flow">
+    <li><span class="en">Restart the server and join the game.</span><span class="fr">Redémarrez le serveur et connectez-vous en jeu.</span></li>
+    <li><span class="en">Stand next to a TV of the base game (apartments, houses, bars…). Stay within a few meters.</span><span class="fr">Placez-vous à côté d'une télé du jeu de base (appartements, maisons, bars…), à quelques mètres au plus.</span></li>
+    <li><span class="en">Type <code>/tv</code>. The remote opens.</span><span class="fr">Tapez <code>/tv</code>. La télécommande s'ouvre.</span></li>
+    <li><span class="en">Press <kbd>Tab</kbd>, paste a YouTube link and press <kbd>Enter</kbd>. The video starts on the screen.</span><span class="fr">Appuyez sur <kbd>Tab</kbd>, collez un lien YouTube puis <kbd>Entrée</kbd>. La vidéo démarre sur l'écran.</span></li>
+    <li><span class="en">Ask a friend to stand close: they must see and hear the same video.</span><span class="fr">Demandez à un ami de se tenir près de vous : il doit voir et entendre la même vidéo.</span></li>
+  </ol>
+  <div class="checks">
+    <label><input type="checkbox" data-id="start-restart"><span><i class="en">Server restarted, no red error in the console.</i><i class="fr">Serveur redémarré, aucune erreur rouge dans la console.</i></span></label>
+    <label><input type="checkbox" data-id="start-tv"><span><i class="en"><code>/tv</code> opens the remote next to a TV.</i><i class="fr"><code>/tv</code> ouvre la télécommande à côté d'une télé.</i></span></label>
+    <label><input type="checkbox" data-id="start-play"><span><i class="en">A YouTube link plays on the screen.</i><i class="fr">Un lien YouTube se lit sur l'écran.</i></span></label>
+  </div>
+  <p class="note en">If <code>/tv</code> says there is no television nearby, you are probably standing next to a prop that is not in <a href="#models">the supported list</a>. See <a href="#screens">custom screens</a> for map and MLO screens.</p>
+  <p class="note fr">Si <code>/tv</code> indique qu'il n'y a pas de télévision proche, vous êtes sans doute à côté d'un prop absent de <a href="#models">la liste gérée</a>. Voir les <a href="#screens">écrans personnalisés</a> pour les écrans de map et de MLO.</p>
+</section>
+
+<!-- ============================================================ 6 USING THE TV -->
+<section id="using">
+  <h2><span class="num">6</span><span class="en">Using the TV</span><span class="fr">Utiliser la télé</span></h2>
+  <p class="en">What your players will do. Share this section with your community or staff.</p>
+  <p class="fr">Ce que feront vos joueurs. Partagez cette section avec votre communauté ou votre staff.</p>
+
+  <div class="shots">
+    <div class="shot"><b><span class="en">1 · Get close</span><span class="fr">1 · Approchez-vous</span></b><p class="en">Stand near a supported TV (within its control distance, 15 m by default).</p><p class="fr">Placez-vous près d'une télé gérée (dans sa distance de contrôle, 15 m par défaut).</p></div>
+    <div class="shot"><b><span class="en">2 · Open the remote</span><span class="fr">2 · Ouvrez la télécommande</span></b><p class="en">Type <code>/tv</code>, use the target eye, or use the remote item, depending on your setup.</p><p class="fr">Tapez <code>/tv</code>, utilisez l'œil du target ou l'objet télécommande, selon votre configuration.</p></div>
+    <div class="shot"><b><span class="en">3 · Pick something</span><span class="fr">3 · Choisissez</span></b><p class="en">Press <kbd>Tab</kbd> for the address panel, or tune a channel with the number keys.</p><p class="fr">Appuyez sur <kbd>Tab</kbd> pour le panneau d'adresse, ou changez de chaîne avec les chiffres.</p></div>
+    <div class="shot"><b><span class="en">4 · Enjoy together</span><span class="fr">4 · Profitez ensemble</span></b><p class="en">Everyone near the screen sees the same picture. Volume fades with distance.</p><p class="fr">Tout le monde près de l'écran voit la même image. Le volume baisse avec la distance.</p></div>
+  </div>
+
+  <h3><span class="en">The address panel</span><span class="fr">Le panneau d'adresse</span></h3>
+  <p class="en">Open it with <kbd>Tab</kbd> (or the arrow-into-screen key on the remote). It contains:</p>
+  <p class="fr">Ouvrez-le avec <kbd>Tab</kbd> (ou la touche « flèche vers l'écran » de la télécommande). Il contient :</p>
+  <ul>
+    <li class="en"><b>Address / search field</b> — paste a link, or type words and press <kbd>Enter</kbd>. A small label tells you what was detected (YouTube, video file, website…). Words are sent to the search engine you pick (<a href="#config-ref">Config.SearchEngines</a>).</li>
+    <li class="fr"><b>Champ adresse / recherche</b> — collez un lien, ou tapez des mots puis <kbd>Entrée</kbd>. Une petite étiquette indique ce qui est détecté (YouTube, fichier vidéo, site web…). Les mots partent vers le moteur de recherche choisi (<a href="#config-ref">Config.SearchEngines</a>).</li>
+    <li class="en"><b>Quick sites</b> — one-click buttons defined by <code>Config.QuickSites</code>.</li>
+    <li class="fr"><b>Raccourcis</b> — boutons en un clic définis par <code>Config.QuickSites</code>.</li>
+    <li class="en"><b>Recent</b> (last 14) and <b>Favorites</b> (up to 30, star button) — saved on each player's own computer, never on your server.</li>
+    <li class="fr"><b>Récents</b> (14 derniers) et <b>Favoris</b> (jusqu'à 30, bouton étoile) — enregistrés sur l'ordinateur de chaque joueur, jamais sur votre serveur.</li>
+    <li class="en"><b>Transport</b> — back 10 s, play/pause, forward 10 s for YouTube and video/audio files.</li>
+    <li class="fr"><b>Lecture</b> — reculer de 10 s, lecture/pause, avancer de 10 s pour YouTube et les fichiers vidéo/audio.</li>
+    <li class="en"><b>Volume</b> slider, mute button and a <b>Stop</b> button that clears the screen.</li>
+    <li class="fr"><b>Volume</b> (curseur), bouton muet et bouton <b>Arrêter</b> qui vide l'écran.</li>
+  </ul>
+
+  <h3><span class="en">Channels, guide and apps</span><span class="fr">Chaînes, guide et applications</span></h3>
+  <p class="en">If you configured <a href="#config">channels</a>, players tune them like a real TV: number keys (multi-digit numbers wait about 1.5 s before validating, <kbd>OK</kbd> validates at once), <b>CH +/−</b>, or <b>GUIDE</b> for the list. <b>MENU</b> / <b>HOME</b> opens the app screen (Channels, YouTube, Twitch, Browser by default). The four <b>color keys</b> jump straight to the apps you chose.</p>
+  <p class="fr">Si vous avez configuré des <a href="#config">chaînes</a>, les joueurs les règlent comme une vraie télé : chiffres (les numéros à plusieurs chiffres attendent environ 1,5 s avant validation, <kbd>OK</kbd> valide tout de suite), <b>CH +/−</b>, ou <b>GUIDE</b> pour la liste. <b>MENU</b> / <b>HOME</b> ouvre l'écran des applications (Chaînes, YouTube, Twitch, Navigateur par défaut). Les quatre <b>touches de couleur</b> ouvrent directement les applications que vous avez choisies.</p>
+
+  <h3><span class="en">Mouse mode (browse a website)</span><span class="fr">Mode souris (naviguer sur un site)</span></h3>
+  <ol class="flow">
+    <li><span class="en">Press the mouse key on the remote. A full-screen browser opens with an address bar.</span><span class="fr">Appuyez sur la touche souris de la télécommande. Un navigateur plein écran s'ouvre avec une barre d'adresse.</span></li>
+    <li><span class="en">Click, scroll with the wheel, type an address or a search and press <kbd>Enter</kbd>. The home and reload buttons act for everybody.</span><span class="fr">Cliquez, défilez à la molette, tapez une adresse ou une recherche puis <kbd>Entrée</kbd>. Les boutons accueil et rechargement agissent pour tout le monde.</span></li>
+    <li><span class="en">Press <kbd>Esc</kbd> to go back to the remote. The page stays on the TV.</span><span class="fr">Appuyez sur <kbd>Échap</kbd> pour revenir à la télécommande. La page reste sur la télé.</span></li>
+  </ol>
+  <p class="note en">Only one player drives the page at a time (a short lease of 25 s renewed by each action). Other players see the same page and get a "TV in use" message if they try to take over. Websites that forbid embedding or require DRM will not display.</p>
+  <p class="note fr">Un seul joueur pilote la page à la fois (un court bail de 25 s renouvelé à chaque action). Les autres voient la même page et reçoivent « télé occupée » s'ils essaient de la prendre. Les sites qui interdisent l'intégration ou exigent un DRM ne s'afficheront pas.</p>
+
+  <h3><span class="en">Streamer mode</span><span class="fr">Mode streamer</span></h3>
+  <p class="en"><code>/streamermode</code> mutes all TV audio for that player only (useful when streaming or recording). Run it again to turn the sound back on. The same switch is the headphones key on the remote.</p>
+  <p class="fr"><code>/streamermode</code> coupe le son de toutes les télés pour ce joueur uniquement (pratique en stream ou en enregistrement). Retapez-la pour rétablir le son. Le même interrupteur est la touche casque de la télécommande.</p>
+</section>
+
+<!-- ============================================================ 7 CONFIGURATION -->
+<section id="config">
+  <h2><span class="num">7</span><span class="en">Configuration</span><span class="fr">Configuration</span></h2>
+  <p class="en">Everything is in <code>config.lua</code>, with a comment above each section. Change only what is <b>after the = sign</b>, save, then run <code>restart scrappydev_tv</code>. An empty list <code>{ }</code> is valid: it just means "nothing configured".</p>
+  <p class="fr">Tout est dans <code>config.lua</code>, avec un commentaire au-dessus de chaque section. Ne changez que ce qui est <b>après le signe =</b>, enregistrez, puis tapez <code>restart scrappydev_tv</code>. Une liste vide <code>{ }</code> est valide : cela veut simplement dire « rien de configuré ».</p>
+  <figure class="code collapsed" data-lang="lua"><figcaption><span class="file">config.lua</span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>-- Scrappy.Dev TV configuration.
+Config = {}
+
+-- Interface language: &#39;en&#39; or &#39;fr&#39;.
+Config.Locale = &#39;en&#39;
+-- Framework: &#39;auto&#39;, &#39;qb&#39;, &#39;qbx&#39;, &#39;esx&#39;, &#39;ox&#39;, or &#39;standalone&#39;.
+Config.Framework = &#39;auto&#39;
+-- Keep this value in sync with fxmanifest.lua when publishing a release.
+Config.Version = &#39;1.0.0&#39;
+-- url must be a public HTTPS URL returning JSON with version, download, and optional notes fields.
+Config.VersionCheck = { enabled = true, url = &#39;&#39;, intervalMinutes = 360 }
+-- Optional HUD bridge. Enable only if the named resource exports the configured function.
+Config.Integrations = { immersiveHud = { enabled = false, resource = &#39;&#39;, export = &#39;SetImmersive&#39;, duration = 15000 } }
+
+-- Command names are written without a leading slash.
+Config.Command = &#39;tv&#39;
+Config.StreamerCommand = &#39;streamermode&#39;
+
+-- Set target=true to use ox_target. item/itemRequired are optional framework inventory gates.
+Config.Access = {
+    command = true,
+    target = false,
+    item = false,         -- Example: &#39;tv_remote&#39; (definitions and icon are in the install folder)
+    itemRequired = false, -- true = players must carry that item to control a TV
+}
+
+-- Interaction range and icon. Text labels come from the selected locale file.
+Config.Target = {
+    distance = 2.5,
+    icon = &#39;fa-solid fa-tv&#39;,
+    label = &#39;Use television&#39;,
+}
+
+-- When enabled, a matching ACE OR a matching job name grants control.
+Config.Permissions = {
+    enabled = false,
+    ace = &#39;scrappydev_tv.control&#39;,
+    jobs = { &#39;police&#39;, &#39;cinema&#39; },
+}
+
+-- Optional extra blocked domains. Subdomains are blocked too; local/private hosts are always rejected.
+Config.BlacklistedHosts = {
+    -- &#39;example.com&#39;,
+}
+
+-- Home page, available search engines, and one-click shortcuts in the remote UI.
+Config.Home = &#39;https://duckduckgo.com/&#39;
+Config.SearchEngines = {
+    { id = &#39;youtube&#39;, label = &#39;YouTube&#39;,    url = &#39;https://www.youtube.com/results?search_query=%s&#39; },
+}
+Config.QuickSites = {
+    { label = &#39;YouTube&#39;, url = &#39;https://www.youtube.com/&#39; },
+    { label = &#39;Twitch&#39;, url = &#39;https://www.twitch.tv/&#39; },
+}
+
+-- Audio defaults and attenuation. Volumes are percentages; distances are meters.
+Config.Audio = {
+    defaultVolume = 50,
+    referenceDistance = 2.5,
+    otherRoomFactor = 0.35,
+}
+
+-- Small light around a playing television. RGB values range from 0 to 255.
+Config.Ambient = {
+    enabled = true,
+    range = 4.5,
+    intensity = 0.55,
+    color = { 190, 205, 255 },
+    maxPlayerDistance = 14.0,
+}
+
+-- Mouse browsing controller lease and input behavior.
+Config.Pointer = {
+    lockSeconds = 25,
+    invertWheel = false,
+    hideImmersiveHud = false,
+}
+
+-- Server-side input limits. Keep these values positive; milliseconds are used where named.
+Config.Limits = {
+    changeCooldownMs = 1200,
+    maxUrlLength = 1800,
+    maxInputPerSecond = 90,
+    maxTvPerPlayerCreate = 25,
+}
+
+local function tv(model, rt, maxdistance, controldistance)
+    return { model = model, rt = rt or &#39;tvscreen&#39;, maxdistance = maxdistance or 30.0, controldistance = controldistance or 15.0 }
+end
+
+-- Supported world TV props. Each entry has model, render-target name, scan range, and control range.
+Config.Models = {
+    tv(&#39;prop_tv_flat_01&#39;),
+    tv(&#39;v_ilev_cin_screen&#39;, &#39;cinscreen&#39;, 40.0, 20.0),
+    tv(&#39;vw_prop_vw_cinema_tv_01&#39;),
+    tv(&#39;2094206603&#39;),
+    tv(&#39;prop_tv_flat_michael&#39;),
+    tv(&#39;prop_trev_tv_01&#39;),
+    tv(&#39;prop_tv_flat_03b&#39;),
+    tv(&#39;prop_tv_flat_03&#39;),
+    tv(&#39;prop_tv_flat_02b&#39;),
+    tv(&#39;prop_tv_flat_02&#39;),
+    tv(&#39;hei_heist_str_avunitl_03&#39;),
+    tv(&#39;mp_b_str_avunitl_03&#39;),
+    tv(&#39;mp_b_str_avunits_01&#39;),
+    tv(&#39;mp_b_str_avunitl_01&#39;),
+    tv(&#39;hei_heist_str_avunitl_01&#39;),
+    tv(&#39;hei_heist_str_avunits_01&#39;),
+    tv(&#39;apa_mp_h_str_avunitl_04&#39;),
+    tv(&#39;apa_mp_h_str_avunitl_01_b&#39;),
+    tv(&#39;apa_mp_h_str_avunits_01&#39;),
+    tv(&#39;apa_mp_h_str_avunits_04&#39;),
+    tv(&#39;prop_tv_01&#39;),
+    tv(&#39;prop_tv_02&#39;),
+    tv(&#39;prop_tv_03&#39;),
+    tv(&#39;prop_tv_04&#39;),
+    tv(&#39;prop_tv_05&#39;),
+    tv(&#39;prop_tv_06&#39;),
+    tv(&#39;prop_tv_07&#39;),
+    tv(&#39;ex_prop_ex_tv_flat_01&#39;, &#39;ex_tvscreen&#39;),
+    tv(&#39;sm_prop_smug_tv_flat_01&#39;, &#39;tv_flat_01&#39;),
+    tv(&#39;prop_tv_test&#39;),
+    tv(&#39;des_tvsmash_root&#39;),
+    tv(&#39;des_tvsmash_start&#39;),
+}
+
+-- Leave disabled for the built-in polygon screen renderer.
+Config.Scaleform = {
+    enabled = false,
+    name = &#39;generic_texture_renderer&#39;,
+    metersPerScale = 12.8,
+}
+
+-- Optional free-standing screens. Add entries here; see README.md for a complete example.
+Config.Screens = {
+    -- { id = &#39;lobby_screen&#39;, coords = vec3(0.0, 0.0, 0.0), width = 4.0, height = 2.25, heading = 0.0, pitch = 0.0, maxdistance = 40.0, controldistance = 15.0, renderer = &#39;poly&#39; },
+}
+
+-- Optional numbered channels. Empty means the remote&#39;s channel guide has no entries.
+Config.Channels = {
+    -- { name = &#39;Local News&#39;, url = &#39;https://www.youtube.com/watch?v=abcdefghijk&#39; },
+}
+
+-- Apps shown on the remote home screen. ColorKeys below refers to these IDs.
+Config.Apps = {
+    { id = &#39;channels&#39;, label = &#39;Channels&#39;, icon = &#39;tv&#39;,      page = &#39;channels&#39; },
+    { id = &#39;youtube&#39;,  label = &#39;YouTube&#39;,  icon = &#39;youtube&#39;, url = &#39;https://www.youtube.com/&#39; },
+    { id = &#39;twitch&#39;,   label = &#39;Twitch&#39;,   icon = &#39;twitch&#39;,  url = &#39;https://www.twitch.tv/&#39; },
+    { id = &#39;browser&#39;,  label = &#39;Browser&#39;,  icon = &#39;globe&#39;,   url = &#39;https://duckduckgo.com/&#39; },
+}
+
+-- Each value must match an Apps.id; &#39;channels&#39; opens the channel guide.
+Config.ColorKeys = { red = &#39;youtube&#39;, green = &#39;twitch&#39;, yellow = &#39;channels&#39;, blue = &#39;browser&#39; }
+
+-- Remote adjustment increments and navigation timing.
+Config.Keys = { volumeStep = 5, seekSeconds = 10, scrollPixels = 260, digitTimeoutMs = 1500 }
+
+-- In-hand remote prop/animation. Set enabled=false to hide the prop while the UI is open.
+Config.Remote = {
+    enabled = true,
+    model = &#39;prop_cs_remote_01&#39;,
+    bone = 28422,
+    pos = vec3(-0.020000, 0.000000, -0.010000), rot = vec3(91.833961, 0.000000, 0.900000),
+    dict = &#39;cellphone@&#39;, clip = &#39;cellphone_text_read_base&#39;,
+}
+
+-- Optional fixed TVs that start playing a URL automatically at resource startup.
+Config.Presets = {
+    -- { coords = vec3(0.0, 0.0, 0.0), url = &#39;https://www.youtube.com/watch?v=abcdefghijk&#39; },
+}
+
+-- Optional client-local props. Leave disabled unless you need this resource to create TVs.
+Config.SpawnProps = {
+    enabled = false,
+    list = {
+        -- { model = &#39;prop_tv_flat_01&#39;, coords = vec3(0.0, 0.0, 0.0), heading = 0.0 },
+    },
+}
+
+Config.Locale = Locales[Config.Locale] and Config.Locale or &#39;en&#39;
+Config.Text = Locales[Config.Locale]
+Config.Target.label = Config.Text.targetLabel
+Config.Target.screenLabel = Config.Text.targetScreenLabel
+
+for _, app in ipairs(Config.Apps) do
+    if Config.Text.apps[app.id] then app.label = Config.Text.apps[app.id] end
+end
+
+for index, channel in ipairs(Config.Channels) do
+    if not channel.name or channel.name == &#39;&#39; then channel.name = Config.Text.channelName:format(index) end
+end</code></pre><button class="more" data-more><span class="en">Show full file</span><span class="fr">Voir tout le fichier</span></button></figure>
+
+  <h3><span class="en">Recipes</span><span class="fr">Recettes</span></h3>
+  <div class="recipes">
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">French interface</span><span class="fr">Interface en français</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Locale = 'fr'</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Target eye + /tv</span><span class="fr">Œil target + /tv</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Access = {
+    command = true,
+    target = true,   -- needs ox_target
+    item = false,
+    itemRequired = false,
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Remote item required</span><span class="fr">Télécommande obligatoire</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Access = {
+    command = false, -- hide /tv, players must use the item
+    target = false,
+    item = 'tv_remote',
+    itemRequired = true,
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Only some jobs (or admins)</span><span class="fr">Seulement certains métiers (ou admins)</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Permissions = {
+    enabled = true,
+    ace = 'scrappydev_tv.control',
+    jobs = { 'police', 'cinema' },
+}
+-- server.cfg:
+-- add_ace group.admin scrappydev_tv.control allow</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Channel guide</span><span class="fr">Guide des chaînes</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Channels = {
+    { name = 'Community TV', url = 'https://youtu.be/abcdefghijk' },
+    { name = 'City Camera',  url = 'https://your-domain.example/live.m3u8' },
+    { name = 'Radio',        url = 'https://your-domain.example/radio.mp3' },
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Add an app and a color key</span><span class="fr">Ajouter une application et une touche couleur</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>table.insert(Config.Apps, {
+    id = 'kick', label = 'Kick', icon = 'kick',
+    url = 'https://kick.com/',
+})
+Config.ColorKeys.green = 'kick'</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Search engines and quick sites</span><span class="fr">Moteurs et raccourcis</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.SearchEngines = {
+    { id = 'youtube', label = 'YouTube', url = 'https://www.youtube.com/results?search_query=%s' },
+    { id = 'google',  label = 'Google',  url = 'https://www.google.com/search?q=%s' },
+}
+Config.QuickSites = {
+    { label = 'YouTube', url = 'https://www.youtube.com/' },
+    { label = 'Twitch',  url = 'https://www.twitch.tv/' },
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Block domains</span><span class="fr">Bloquer des domaines</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.BlacklistedHosts = {
+    'example.com',   -- also blocks www.example.com, cdn.example.com...
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Lobby TV that plays by itself</span><span class="fr">Télé d'accueil qui joue toute seule</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Presets = {
+    { coords = vec3(100.0, 200.0, 30.0), url = 'https://youtu.be/abcdefghijk' },
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Quieter, shorter range</span><span class="fr">Plus discret, portée réduite</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Audio = {
+    defaultVolume = 30,
+    referenceDistance = 2.0,
+    otherRoomFactor = 0.2,
+}</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">No TV glow</span><span class="fr">Sans halo lumineux</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Ambient.enabled = false</code></pre></figure>
+    <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Hide the hand-held remote</span><span class="fr">Masquer la télécommande en main</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Remote.enabled = false</code></pre></figure>
+  </div>
+  <p class="note en">Every channel and app label you write stays as you wrote it. Built-in labels (Channels, YouTube, Browser) follow <code>Config.Locale</code>.</p>
+  <p class="note fr">Chaque nom de chaîne ou d'application que vous écrivez reste tel quel. Les libellés intégrés (Chaînes, YouTube, Navigateur) suivent <code>Config.Locale</code>.</p>
+  <p class="note en">Use only links you own or have the right to broadcast. Many websites refuse to be embedded, and DRM services (Netflix, Disney+…) never work.</p>
+  <p class="note fr">N'utilisez que des liens qui vous appartiennent ou que vous avez le droit de diffuser. Beaucoup de sites refusent l'intégration et les services à DRM (Netflix, Disney+…) ne fonctionnent jamais.</p>
+</section>
+
+<!-- ============================================================ 8 CUSTOM SCREENS -->
+<section id="screens">
+  <h2><span class="num">8</span><span class="en">Custom screens (maps, MLOs)</span><span class="fr">Écrans personnalisés (maps, MLO)</span></h2>
+  <p class="en">The script recognizes base-game TV props out of the box. For a <b>screen that is not a supported prop</b> (a cinema wall, a bar projector, an MLO TV…) you declare a free-standing screen: a flat rectangle drawn at the coordinates you choose. No extra file is needed.</p>
+  <p class="fr">Le script reconnaît les props de télé du jeu de base d'office. Pour un <b>écran qui n'est pas un prop géré</b> (mur de cinéma, projecteur de bar, télé de MLO…), vous déclarez un écran libre : un rectangle plat dessiné aux coordonnées de votre choix. Aucun fichier supplémentaire n'est nécessaire.</p>
+  <ol class="flow">
+    <li><span class="en">Stand in front of the screen and note its center coordinates (<code>vec3</code>) with your usual coordinate tool.</span><span class="fr">Placez-vous devant l'écran et notez les coordonnées de son centre (<code>vec3</code>) avec votre outil habituel.</span></li>
+    <li><span class="en">Add an entry to <code>Config.Screens</code> (unique <code>id</code>, <code>width</code> and <code>height</code> in meters):</span><span class="fr">Ajoutez une entrée dans <code>Config.Screens</code> (<code>id</code> unique, <code>width</code> et <code>height</code> en mètres) :</span></li>
+  </ol>
+  <figure class="code" data-lang="lua"><figcaption><span class="file">config.lua</span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>Config.Screens = {
+    {
+        id = 'lobby_screen',
+        coords = vec3(100.0, 200.0, 30.0), -- center of the screen
+        width = 4.0, height = 2.25,        -- meters
+        heading = 90.0, pitch = 0.0,       -- degrees
+        maxdistance = 40.0, controldistance = 15.0,
+        renderer = 'poly',                 -- built-in renderer
+        flip = false,
+    },
+}</code></pre></figure>
+  <ol class="flow" start="3">
+    <li><span class="en">Restart the resource, stand near the screen and run <code>/tv</code>. Start a video.</span><span class="fr">Redémarrez la ressource, approchez-vous de l'écran et tapez <code>/tv</code>. Lancez une vidéo.</span></li>
+    <li><span class="en">Fine-tune with the local calibration command <code>/tvcalib</code> (see below). Each call prints a ready-to-paste line.</span><span class="fr">Ajustez avec la commande de calibrage local <code>/tvcalib</code> (voir ci-dessous). Chaque appel affiche une ligne prête à coller.</span></li>
+  </ol>
+  <h3><span class="en">Calibrating with /tvcalib</span><span class="fr">Calibrer avec /tvcalib</span></h3>
+  <p class="en">This command changes only the local screen configuration. Stand near the screen, then adjust one field at a time. A value with <b>+</b> or <b>−</b> in front is a <b>change</b>; a plain number <b>replaces</b> the value. Fields: <code>x y z heading pitch width height flip</code> (<code>flip 1</code> = true, <code>flip 0</code> = false).</p>
+  <p class="fr">Cette commande modifie uniquement la configuration locale de l'écran. Placez-vous près de l'écran, puis ajustez un champ à la fois. Une valeur précédée de <b>+</b> ou <b>−</b> est une <b>variation</b> ; un nombre seul <b>remplace</b> la valeur. Champs : <code>x y z heading pitch width height flip</code> (<code>flip 1</code> = true, <code>flip 0</code> = false).</p>
+  <figure class="code" data-lang="cfg"><figcaption><span class="file"><span class="en">Examples (in game)</span><span class="fr">Exemples (en jeu)</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>/tvcalib heading +5
+/tvcalib z -0.10
+/tvcalib width 3.2
+/tvcalib flip 1
+/tvcalib</code></pre></figure>
+  <p class="en">The last command (no argument) only prints the current values. <b>Copy the printed line into <code>config.lua</code></b>: <code>/tvcalib</code> changes the screen live, it does not save the file.</p>
+  <p class="fr">La dernière commande (sans argument) affiche seulement les valeurs actuelles. <b>Copiez la ligne affichée dans <code>config.lua</code></b> : <code>/tvcalib</code> modifie l'écran en direct, elle n'enregistre pas le fichier.</p>
+  <div class="cols">
+    <div class="col"><b><span class="en">Image is mirrored</span><span class="fr">Image en miroir</span></b><p class="en">Set <code>flip = true</code>, or turn <code>heading</code> by 180.</p><p class="fr">Mettez <code>flip = true</code>, ou tournez <code>heading</code> de 180.</p></div>
+    <div class="col"><b><span class="en">Image floats in front</span><span class="fr">Image devant le mur</span></b><p class="en">Move the screen back a few centimeters with <code>/tvcalib x</code> / <code>y</code> / <code>z</code>.</p><p class="fr">Reculez l'écran de quelques centimètres avec <code>/tvcalib x</code> / <code>y</code> / <code>z</code>.</p></div>
+    <div class="col"><b><span class="en">Screen too big / small</span><span class="fr">Écran trop grand / petit</span></b><p class="en">Adjust <code>width</code> and <code>height</code>; keep the 16:9 ratio (width = height × 1.78).</p><p class="fr">Ajustez <code>width</code> et <code>height</code> ; gardez le ratio 16:9 (largeur = hauteur × 1,78).</p></div>
+    <div class="col"><b><span class="en">Tilted screen</span><span class="fr">Écran incliné</span></b><p class="en">Use <code>pitch</code> in degrees for wall mounts that tilt.</p><p class="fr">Utilisez <code>pitch</code> en degrés pour les supports inclinés.</p></div>
+  </div>
+  <p class="note en">With <code>ox_target</code> enabled, every configured screen also gets a target zone around its coordinates.</p>
+  <p class="note fr">Avec <code>ox_target</code> activé, chaque écran configuré reçoit aussi une zone de target autour de ses coordonnées.</p>
+  <h3><span class="en">Spawned props and presets</span><span class="fr">Props créés et présélections</span></h3>
+  <p class="en"><code>Config.SpawnProps</code> (off by default) makes the script create TV props for every player — only use it if your map has no TV there, or players will see two. <code>Config.Presets</code> starts a URL at fixed coordinates when the resource starts; use the coordinates of a recognized prop or a configured screen.</p>
+  <p class="fr"><code>Config.SpawnProps</code> (désactivé par défaut) fait créer des props de télé par le script chez tous les joueurs — à n'utiliser que si votre map n'a pas de télé à cet endroit, sinon les joueurs en verront deux. <code>Config.Presets</code> lance une URL à des coordonnées fixes au démarrage de la ressource ; utilisez celles d'un prop reconnu ou d'un écran configuré.</p>
+  <div class="checks">
+    <label><input type="checkbox" data-id="cfg-config"><span><i class="en">I reviewed <code>config.lua</code> (language, access, channels).</i><i class="fr">J'ai relu <code>config.lua</code> (langue, accès, chaînes).</i></span></label>
+    <label><input type="checkbox" data-id="cfg-screens"><span><i class="en">My custom screens (if any) are calibrated.</i><i class="fr">Mes écrans personnalisés (s'il y en a) sont calibrés.</i></span></label>
+  </div>
+</section>
+
+<!-- ============================================================ CONFIG REFERENCE -->
+<section id="config-ref">
+  <h2><span class="en">Complete configuration reference</span><span class="fr">Référence complète de la configuration</span></h2>
+  <p class="en">Every setting of <code>config.lua</code> with its default, allowed values and effect. Setting <code>Config.Locale</code> to anything other than <code>en</code>/<code>fr</code> falls back to English.</p>
+  <p class="fr">Chaque réglage de <code>config.lua</code> avec sa valeur par défaut, ses valeurs permises et son effet. Un <code>Config.Locale</code> autre que <code>en</code>/<code>fr</code> retombe sur l'anglais.</p>
+  <div class="refnav"><a href="#ref-general"><span class="en">General</span><span class="fr">Général</span></a><a href="#ref-access"><span class="en">Access &amp; permissions</span><span class="fr">Accès et permissions</span></a><a href="#ref-browser"><span class="en">Browser &amp; links</span><span class="fr">Navigateur et liens</span></a><a href="#ref-sound"><span class="en">Sound &amp; light</span><span class="fr">Son et lumière</span></a><a href="#ref-control"><span class="en">Control &amp; limits</span><span class="fr">Contrôle et limites</span></a><a href="#ref-content"><span class="en">Channels &amp; apps</span><span class="fr">Chaînes et applications</span></a><a href="#ref-world"><span class="en">Screens &amp; world</span><span class="fr">Écrans et monde</span></a></div>
+
+  <h3 id="ref-general"><span class="en">General</span><span class="fr">Général</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Locale</code></td><td><code>'en'</code></td><td class="allowed">'en' · 'fr'</td><td><span class="en">Language of notifications, target labels and the interface.</span><span class="fr">Langue des notifications, des libellés target et de l'interface.</span></td></tr>
+    <tr><td><code>Config.Framework</code></td><td><code>'auto'</code></td><td class="allowed">auto · qb · qbx · esx · ox · standalone</td><td><span class="en"><code>auto</code> picks QBX, then QBCore, then ESX, then ox_core, then standalone. Force a value only if detection picks the wrong core.</span><span class="fr"><code>auto</code> choisit QBX, puis QBCore, puis ESX, puis ox_core, puis standalone. Ne forcez une valeur que si la détection se trompe.</span></td></tr>
+    <tr><td><code>Config.Command</code></td><td><code>'tv'</code></td><td class="allowed">one word, no slash</td><td><span class="en">Name of the command that opens the remote.</span><span class="fr">Nom de la commande qui ouvre la télécommande.</span></td></tr>
+    <tr><td><code>Config.StreamerCommand</code></td><td><code>'streamermode'</code></td><td class="allowed">one word, no slash</td><td><span class="en">Name of the command that mutes TV audio for the player.</span><span class="fr">Nom de la commande qui coupe le son des télés pour le joueur.</span></td></tr>
+    <tr><td><code>Config.Version</code></td><td><code>'1.0.0'</code></td><td class="allowed">text</td><td><span class="en">Installed version, shown in update messages. Do not edit.</span><span class="fr">Version installée, affichée dans les messages de mise à jour. Ne pas modifier.</span></td></tr>
+    <tr><td><code>Config.VersionCheck.enabled</code></td><td><code>true</code></td><td class="allowed">true · false</td><td><span class="en">Check for a newer release and print a notice in the console. It never downloads anything.</span><span class="fr">Vérifie s'il existe une version plus récente et l'indique dans la console. Ne télécharge jamais rien.</span></td></tr>
+    <tr><td><code>Config.VersionCheck.url</code></td><td><code>''</code></td><td class="allowed">https URL</td><td><span class="en">Address of the release file (see <a href="#updates">Updates</a>).</span><span class="fr">Adresse du fichier de version (voir <a href="#updates">Mises à jour</a>).</span></td></tr>
+    <tr><td><code>Config.VersionCheck.intervalMinutes</code></td><td><code>360</code></td><td class="allowed">≥ 30</td><td><span class="en">Delay between two checks (minutes). Values under 30 are raised to 30.</span><span class="fr">Délai entre deux vérifications (minutes). Les valeurs sous 30 passent à 30.</span></td></tr>
+  </tbody></table>
+
+  <h3 id="ref-access"><span class="en">Access &amp; permissions</span><span class="fr">Accès et permissions</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Access.command</code></td><td><code>true</code></td><td class="allowed">true · false</td><td><span class="en">Registers the <code>/tv</code> command. Set to <code>false</code> to force target or item use.</span><span class="fr">Enregistre la commande <code>/tv</code>. Mettez <code>false</code> pour imposer le target ou l'objet.</span></td></tr>
+    <tr><td><code>Config.Access.target</code></td><td><code>false</code></td><td class="allowed">true · false</td><td><span class="en">Adds an ox_target interaction on TV props and a zone around each custom screen. Needs <code>ox_target</code> started.</span><span class="fr">Ajoute une interaction ox_target sur les props de télé et une zone autour de chaque écran perso. Nécessite <code>ox_target</code>.</span></td></tr>
+    <tr><td><code>Config.Access.item</code></td><td><code>false</code></td><td class="allowed">false · 'item_name'</td><td><span class="en">Name of the remote item (<code>'tv_remote'</code>). On QBCore, QBX and ESX the usable item is registered for you.</span><span class="fr">Nom de l'objet télécommande (<code>'tv_remote'</code>). Sur QBCore, QBX et ESX l'objet utilisable est enregistré pour vous.</span></td></tr>
+    <tr><td><code>Config.Access.itemRequired</code></td><td><code>false</code></td><td class="allowed">true · false</td><td><span class="en">Players must carry the item to control a TV. The server re-checks the item on every action.</span><span class="fr">Les joueurs doivent porter l'objet pour contrôler une télé. Le serveur revérifie l'objet à chaque action.</span></td></tr>
+    <tr><td><code>Config.Target.distance</code></td><td><code>2.5</code></td><td class="allowed">meters</td><td><span class="en">Range of the target interaction.</span><span class="fr">Portée de l'interaction target.</span></td></tr>
+    <tr><td><code>Config.Target.icon</code></td><td><code>'fa-solid fa-tv'</code></td><td class="allowed">Font Awesome class</td><td><span class="en">Icon shown by ox_target. The label comes from the locale file.</span><span class="fr">Icône affichée par ox_target. Le libellé vient du fichier de langue.</span></td></tr>
+    <tr><td><code>Config.Permissions.enabled</code></td><td><code>false</code></td><td class="allowed">true · false</td><td><span class="en">Restrict who may control TVs. When off, everybody can.</span><span class="fr">Restreint qui peut contrôler les télés. Désactivé : tout le monde peut.</span></td></tr>
+    <tr><td><code>Config.Permissions.ace</code></td><td><code>'scrappydev_tv.control'</code></td><td class="allowed">ACE name</td><td><span class="en">A player holding this ACE is allowed.</span><span class="fr">Un joueur qui possède cet ACE est autorisé.</span></td></tr>
+    <tr><td><code>Config.Permissions.jobs</code></td><td><code>{ 'police', 'cinema' }</code></td><td class="allowed">list of job names</td><td><span class="en">A player with one of these exact job names is allowed (ACE <b>or</b> job). Needs a framework; standalone uses ACE only.</span><span class="fr">Un joueur ayant l'un de ces noms de métier exacts est autorisé (ACE <b>ou</b> métier). Nécessite un framework ; standalone n'utilise que l'ACE.</span></td></tr>
+  </tbody></table>
+
+  <h3 id="ref-browser"><span class="en">Browser &amp; links</span><span class="fr">Navigateur et liens</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Home</code></td><td><code>'https://duckduckgo.com/'</code></td><td class="allowed">https URL</td><td><span class="en">Page opened by the Home button in mouse mode.</span><span class="fr">Page ouverte par le bouton Accueil en mode souris.</span></td></tr>
+    <tr><td><code>Config.SearchEngines</code></td><td><code>YouTube</code></td><td class="allowed">list { id, label, url }</td><td><span class="en">Search buttons. <code>id</code> unique, <code>url</code> must contain <code>%s</code> where the encoded search goes.</span><span class="fr">Boutons de recherche. <code>id</code> unique, <code>url</code> doit contenir <code>%s</code> à l'endroit de la recherche encodée.</span></td></tr>
+    <tr><td><code>Config.QuickSites</code></td><td><code>YouTube, Twitch</code></td><td class="allowed">list { label, url }</td><td><span class="en">One-click shortcut chips in the address panel.</span><span class="fr">Pastilles de raccourci en un clic dans le panneau d'adresse.</span></td></tr>
+    <tr><td><code>Config.BlacklistedHosts</code></td><td><code>{ }</code></td><td class="allowed">domains, no https://</td><td><span class="en">Extra blocked domains (subdomains included). Literal IP addresses and local suffixes are rejected; DNS and redirects are not inspected.</span><span class="fr">Domaines bloqués en plus (sous-domaines inclus). Les IP littérales et suffixes locaux sont refusés ; les DNS et redirections ne sont pas inspectés.</span></td></tr>
+  </tbody></table>
+
+  <h3 id="ref-sound"><span class="en">Sound &amp; light</span><span class="fr">Son et lumière</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Audio.defaultVolume</code></td><td><code>50</code></td><td class="allowed">0 – 100</td><td><span class="en">Volume of a TV that has never been adjusted.</span><span class="fr">Volume d'une télé jamais réglée.</span></td></tr>
+    <tr><td><code>Config.Audio.referenceDistance</code></td><td><code>2.5</code></td><td class="allowed">meters</td><td><span class="en">Distance at full volume. Beyond it the sound fades with a smooth curve until the TV's range.</span><span class="fr">Distance à plein volume. Au-delà, le son baisse en douceur jusqu'à la portée de la télé.</span></td></tr>
+    <tr><td><code>Config.Audio.otherRoomFactor</code></td><td><code>0.35</code></td><td class="allowed">0.0 – 1.0</td><td><span class="en">Multiplier applied when the TV and the player are in different interiors (0 = silent, 1 = no change).</span><span class="fr">Multiplicateur appliqué quand la télé et le joueur sont dans des intérieurs différents (0 = silence, 1 = inchangé).</span></td></tr>
+    <tr><td><code>Config.Ambient.enabled</code></td><td><code>true</code></td><td class="allowed">true · false</td><td><span class="en">Soft light around a playing TV.</span><span class="fr">Lumière douce autour d'une télé en lecture.</span></td></tr>
+    <tr><td><code>Config.Ambient.range</code></td><td><code>4.5</code></td><td class="allowed">meters</td><td><span class="en">Reach of the glow.</span><span class="fr">Portée du halo.</span></td></tr>
+    <tr><td><code>Config.Ambient.intensity</code></td><td><code>0.55</code></td><td class="allowed">number</td><td><span class="en">Brightness of the glow.</span><span class="fr">Luminosité du halo.</span></td></tr>
+    <tr><td><code>Config.Ambient.color</code></td><td><code>{ 190, 205, 255 }</code></td><td class="allowed">{ r, g, b } 0 – 255</td><td><span class="en">Color of the glow.</span><span class="fr">Couleur du halo.</span></td></tr>
+    <tr><td><code>Config.Ambient.maxPlayerDistance</code></td><td><code>14.0</code></td><td class="allowed">meters</td><td><span class="en">Furthest viewer who gets the light.</span><span class="fr">Spectateur le plus éloigné qui reçoit la lumière.</span></td></tr>
+  </tbody></table>
+
+  <h3 id="ref-control"><span class="en">Control &amp; limits</span><span class="fr">Contrôle et limites</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Pointer.lockSeconds</code></td><td><code>25</code></td><td class="allowed">seconds</td><td><span class="en">How long a player keeps control of a TV in mouse mode after their last action.</span><span class="fr">Durée pendant laquelle un joueur garde le contrôle d'une télé en mode souris après sa dernière action.</span></td></tr>
+    <tr><td><code>Config.Pointer.invertWheel</code></td><td><code>false</code></td><td class="allowed">true · false</td><td><span class="en">Reverses the scroll direction in mouse mode.</span><span class="fr">Inverse le sens du défilement en mode souris.</span></td></tr>
+    <tr><td><code>Config.Pointer.hideImmersiveHud</code></td><td><code>false</code></td><td class="allowed">true · false</td><td><span class="en">Calls your HUD integration while mouse mode is active. Needs <code>Config.Integrations</code>.</span><span class="fr">Appelle votre intégration HUD pendant le mode souris. Nécessite <code>Config.Integrations</code>.</span></td></tr>
+    <tr><td><code>Config.Integrations.immersiveHud</code></td><td><code>{ enabled = false, resource = '', export = 'SetImmersive', duration = 15000 }</code></td><td class="allowed">resource and export names</td><td><span class="en">Optional HUD bridge. The export is called as <code>(enabled, durationMs)</code>. Leave disabled if your HUD has no such export.</span><span class="fr">Pont HUD optionnel. L'export est appelé avec <code>(enabled, durationMs)</code>. Laissez désactivé si votre HUD n'a pas cet export.</span></td></tr>
+    <tr><td><code>Config.Limits.changeCooldownMs</code></td><td><code>1200</code></td><td class="allowed">milliseconds</td><td><span class="en">Minimum delay between two link changes by the same player.</span><span class="fr">Délai minimum entre deux changements de lien par le même joueur.</span></td></tr>
+    <tr><td><code>Config.Limits.maxUrlLength</code></td><td><code>1800</code></td><td class="allowed">characters</td><td><span class="en">Longest link accepted.</span><span class="fr">Lien le plus long accepté.</span></td></tr>
+    <tr><td><code>Config.Limits.maxInputPerSecond</code></td><td><code>90</code></td><td class="allowed">events / second</td><td><span class="en">Mouse and wheel events a player may send per second in mouse mode.</span><span class="fr">Évènements souris et molette qu'un joueur peut envoyer par seconde en mode souris.</span></td></tr>
+    <tr><td><code>Config.Limits.maxTvPerPlayerCreate</code></td><td><code>25</code></td><td class="allowed">per minute</td><td><span class="en">New TVs a player may register per minute (protects against spam).</span><span class="fr">Nouvelles télés qu'un joueur peut enregistrer par minute (protège contre le spam).</span></td></tr>
+    <tr><td><code>Config.Keys.volumeStep</code></td><td><code>5</code></td><td class="allowed">points</td><td><span class="en">Volume change per press of VOL +/−.</span><span class="fr">Variation de volume par appui sur VOL +/−.</span></td></tr>
+    <tr><td><code>Config.Keys.seekSeconds</code></td><td><code>10</code></td><td class="allowed">seconds</td><td><span class="en">Jump of the left/right keys and the ±10 s buttons.</span><span class="fr">Saut des touches gauche/droite et des boutons ±10 s.</span></td></tr>
+    <tr><td><code>Config.Keys.scrollPixels</code></td><td><code>260</code></td><td class="allowed">pixels</td><td><span class="en">Scroll step of the up/down keys on a web page.</span><span class="fr">Pas de défilement des touches haut/bas sur une page web.</span></td></tr>
+    <tr><td><code>Config.Keys.digitTimeoutMs</code></td><td><code>1500</code></td><td class="allowed">milliseconds</td><td><span class="en">Wait before a typed channel number is validated.</span><span class="fr">Attente avant la validation d'un numéro de chaîne tapé.</span></td></tr>
+    <tr><td><code>Config.Remote.enabled</code></td><td><code>true</code></td><td class="allowed">true · false</td><td><span class="en">Shows the hand-held remote and its animation while the remote UI is open.</span><span class="fr">Affiche la télécommande en main et son animation pendant que l'interface est ouverte.</span></td></tr>
+    <tr><td><code>Config.Remote.model / bone / pos / rot / dict / clip</code></td><td><code>prop_cs_remote_01 …</code></td><td class="allowed">GTA names</td><td><span class="en">Prop, bone, offset, rotation and animation of the hand-held remote. Change only to adjust the pose.</span><span class="fr">Prop, os, décalage, rotation et animation de la télécommande en main. À modifier seulement pour ajuster la pose.</span></td></tr>
+  </tbody></table>
+
+  <h3 id="ref-content"><span class="en">Channels &amp; apps</span><span class="fr">Chaînes et applications</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Channels</code></td><td><code>{ }</code></td><td class="allowed">list { name, url }</td><td><span class="en">Numbered channels (1, 2, 3…, in the order written). A missing <code>name</code> becomes "Channel N". Empty = the guide says no channels.</span><span class="fr">Chaînes numérotées (1, 2, 3…, dans l'ordre d'écriture). Un <code>name</code> manquant devient « Chaîne N ». Vide = le guide indique qu'il n'y a aucune chaîne.</span></td></tr>
+    <tr><td><code>Config.Apps</code></td><td><code>Channels, YouTube, Twitch, Browser</code></td><td class="allowed">list { id, label, icon, url | page }</td><td><span class="en">Tiles of the remote home screen. <code>icon</code>: tv · youtube · twitch · kick · globe · star · film. Use <code>page = 'channels'</code> for the guide or <code>url = ...</code> to open a link. Built-in ids (<code>channels</code>, <code>youtube</code>, <code>browser</code>) use translated labels.</span><span class="fr">Tuiles de l'écran d'accueil de la télécommande. <code>icon</code> : tv · youtube · twitch · kick · globe · star · film. Utilisez <code>page = 'channels'</code> pour le guide ou <code>url = ...</code> pour ouvrir un lien. Les ids intégrés (<code>channels</code>, <code>youtube</code>, <code>browser</code>) ont des libellés traduits.</span></td></tr>
+    <tr><td><code>Config.ColorKeys</code></td><td><code>red = youtube · green = twitch · yellow = channels · blue = browser</code></td><td class="allowed">each = an <code>Apps.id</code></td><td><span class="en">App opened by each color key. A value that matches no app does nothing.</span><span class="fr">Application ouverte par chaque touche de couleur. Une valeur qui ne correspond à aucune application ne fait rien.</span></td></tr>
+  </tbody></table>
+
+  <h3 id="ref-world"><span class="en">Screens &amp; world</span><span class="fr">Écrans et monde</span></h3>
+  <table class="ref"><thead><tr><th><span class="en">Setting</span><span class="fr">Réglage</span></th><th><span class="en">Default</span><span class="fr">Défaut</span></th><th><span class="en">Allowed</span><span class="fr">Valeurs</span></th><th><span class="en">What it does</span><span class="fr">Rôle</span></th></tr></thead><tbody>
+    <tr><td><code>Config.Models</code></td><td><code>32 props</code></td><td class="allowed">list of <code>tv(model, rt, maxdistance, controldistance)</code></td><td><span class="en">Recognized TV props (see <a href="#models">the list</a>). Only add models that have a GTA render target.</span><span class="fr">Props de télé reconnus (voir <a href="#models">la liste</a>). N'ajoutez que des modèles qui ont une cible de rendu GTA.</span></td></tr>
+    <tr><td><code>Config.Screens</code></td><td><code>{ }</code></td><td class="allowed">list of screens</td><td><span class="en">Free-standing screens. Fields: <code>id</code> (unique), <code>coords</code> (vec3, center), <code>width</code>, <code>height</code> (m), <code>heading</code>, <code>pitch</code> (°), <code>maxdistance</code> (default 30), <code>controldistance</code> (default 15), <code>renderer</code> (<code>'poly'</code> · <code>'scaleform'</code>), <code>flip</code>.</span><span class="fr">Écrans libres. Champs : <code>id</code> (unique), <code>coords</code> (vec3, centre), <code>width</code>, <code>height</code> (m), <code>heading</code>, <code>pitch</code> (°), <code>maxdistance</code> (30 par défaut), <code>controldistance</code> (15 par défaut), <code>renderer</code> (<code>'poly'</code> · <code>'scaleform'</code>), <code>flip</code>.</span></td></tr>
+    <tr><td><code>Config.Presets</code></td><td><code>{ }</code></td><td class="allowed">list { coords, url }</td><td><span class="en">TVs that start playing a link when the resource starts. A bad coordinate or link is skipped with a console message.</span><span class="fr">Télés qui lancent un lien au démarrage de la ressource. Une coordonnée ou un lien invalide est ignoré avec un message en console.</span></td></tr>
+    <tr><td><code>Config.SpawnProps</code></td><td><code>{ enabled = false }</code></td><td class="allowed">{ enabled, list }</td><td><span class="en">Creates local TV props on every client: <code>{ model, coords, heading }</code>. Not networked entities.</span><span class="fr">Crée des props de télé locaux chez chaque client : <code>{ model, coords, heading }</code>. Ce ne sont pas des entités réseau.</span></td></tr>
+    <tr><td><code>Config.Scaleform</code></td><td><code>{ enabled = false }</code></td><td class="allowed">enabled · name · metersPerScale</td><td><span class="en">Optional external renderer for custom screens (needs a .gfx movie you are allowed to use, not included). Keep disabled for the built-in renderer.</span><span class="fr">Rendu externe optionnel pour les écrans perso (nécessite un film .gfx dont vous avez le droit d'usage, non inclus). Laissez désactivé pour le rendu intégré.</span></td></tr>
+  </tbody></table>
+</section>
+
+<!-- ============================================================ MODELS -->
+<section id="models">
+  <h2><span class="en">Supported TV props</span><span class="fr">Props de télé gérés</span></h2>
+  <p class="en">These are read from your <code>config.lua</code>. A TV is detected within <b>scan range</b>; the remote opens within <b>control range</b>. An entry is <code>tv(model, renderTarget, scanRange, controlRange)</code> and the defaults are <code>'tvscreen'</code>, 30 m and 15 m. Adding a random model does <b>not</b> create a screen: it needs a GTA render target of that name.</p>
+  <p class="fr">Cette liste est lue dans votre <code>config.lua</code>. Une télé est détectée dans la <b>portée de détection</b> ; la télécommande s'ouvre dans la <b>portée de contrôle</b>. Une entrée est <code>tv(model, renderTarget, scanRange, controlRange)</code> et les valeurs par défaut sont <code>'tvscreen'</code>, 30 m et 15 m. Ajouter un modèle au hasard ne crée <b>pas</b> d'écran : il lui faut une cible de rendu GTA de ce nom.</p>
+  <table>
+    <thead><tr><th><span class="en">Model</span><span class="fr">Modèle</span></th><th><span class="en">Render target</span><span class="fr">Cible de rendu</span></th><th><span class="en">Scan range</span><span class="fr">Portée de détection</span></th><th><span class="en">Control range</span><span class="fr">Portée de contrôle</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>prop_tv_flat_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>v_ilev_cin_screen</code></td><td><code>cinscreen</code></td><td>40 m</td><td>20 m</td></tr>
+      <tr><td><code>vw_prop_vw_cinema_tv_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>2094206603</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_flat_michael</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_trev_tv_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_flat_03b</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_flat_03</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_flat_02b</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_flat_02</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>hei_heist_str_avunitl_03</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>mp_b_str_avunitl_03</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>mp_b_str_avunits_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>mp_b_str_avunitl_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>hei_heist_str_avunitl_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>hei_heist_str_avunits_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>apa_mp_h_str_avunitl_04</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>apa_mp_h_str_avunitl_01_b</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>apa_mp_h_str_avunits_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>apa_mp_h_str_avunits_04</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_01</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_02</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_03</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_04</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_05</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_06</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_07</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>ex_prop_ex_tv_flat_01</code></td><td><code>ex_tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>sm_prop_smug_tv_flat_01</code></td><td><code>tv_flat_01</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>prop_tv_test</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>des_tvsmash_root</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+      <tr><td><code>des_tvsmash_start</code></td><td><code>tvscreen</code></td><td>30 m</td><td>15 m</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ LINKS -->
+<section id="links">
+  <h2><span class="en">Supported links</span><span class="fr">Liens pris en charge</span></h2>
+  <p class="en">The server classifies every link and the screen plays it the right way. Typing <code>example.com/page</code> without <code>https://</code> works: it is added for you.</p>
+  <p class="fr">Le serveur classe chaque lien et l'écran le lit de la bonne façon. Taper <code>example.com/page</code> sans <code>https://</code> fonctionne : il est ajouté pour vous.</p>
+  <table>
+    <thead><tr><th><span class="en">Type</span><span class="fr">Type</span></th><th><span class="en">Accepted forms</span><span class="fr">Formes acceptées</span></th><th><span class="en">Behavior</span><span class="fr">Comportement</span></th></tr></thead>
+    <tbody>
+      <tr><td><b>YouTube</b></td><td><code>youtube.com/watch?v=…</code> · <code>youtu.be/…</code> · <code>/shorts/</code> · <code>/live/</code> · <code>/embed/</code></td><td><span class="en">Synchronized video. Start time with <code>?t=90</code>, <code>?t=1m30s</code> or <code>?start=90</code>. Pause and seek work.</span><span class="fr">Vidéo synchronisée. Début avec <code>?t=90</code>, <code>?t=1m30s</code> ou <code>?start=90</code>. Pause et avance fonctionnent.</span></td></tr>
+      <tr><td><b>Vimeo · Dailymotion</b></td><td><code>vimeo.com/123456</code> · <code>dailymotion.com/video/x…</code> · <code>dai.ly/x…</code></td><td><span class="en">Opened in their embedded player with autoplay.</span><span class="fr">Ouverts dans leur lecteur intégré avec lecture automatique.</span></td></tr>
+      <tr><td><b><span class="en">Live streams (HLS)</span><span class="fr">Flux en direct (HLS)</span></b></td><td><code>….m3u8</code></td><td><span class="en">Plays in the built-in player. The small hls.js library is fetched from a public CDN (jsDelivr) the first time a stream is played.</span><span class="fr">Lu dans le lecteur intégré. La petite bibliothèque hls.js est récupérée sur un CDN public (jsDelivr) à la première lecture d'un flux.</span></td></tr>
+      <tr><td><b><span class="en">Video files</span><span class="fr">Fichiers vidéo</span></b></td><td><code>.mp4 .webm .m4v .mov .ogv</code></td><td><span class="en">Direct link to a public file. Synchronized, with pause and seek. Needs codecs supported by the FiveM browser (MP4/H.264 and WebM are the safest).</span><span class="fr">Lien direct vers un fichier public. Synchronisé, avec pause et avance. Nécessite des codecs gérés par le navigateur de FiveM (MP4/H.264 et WebM sont les plus sûrs).</span></td></tr>
+      <tr><td><b><span class="en">Audio files</span><span class="fr">Fichiers audio</span></b></td><td><code>.mp3 .ogg .oga .wav .m4a .aac .flac .opus</code></td><td><span class="en">Plays as audio (radio, music). Synchronized.</span><span class="fr">Lu en audio (radio, musique). Synchronisé.</span></td></tr>
+      <tr><td><b><span class="en">Images</span><span class="fr">Images</span></b></td><td><code>.png .jpg .jpeg .gif .webp .bmp .avif</code></td><td><span class="en">Shown on the screen (posters, menus, slides).</span><span class="fr">Affichées sur l'écran (affiches, menus, diaporamas).</span></td></tr>
+      <tr><td><b><span class="en">Websites</span><span class="fr">Sites web</span></b></td><td><span class="en">any <code>https://</code> page (Twitch, Kick, Facebook, SoundCloud are recognized)</span><span class="fr">toute page <code>https://</code> (Twitch, Kick, Facebook, SoundCloud sont reconnus)</span></td><td><span class="en">Shown as a web page, navigable in mouse mode. Not synchronized by time. Sites that refuse embedding will not load.</span><span class="fr">Affichée comme page web, navigable en mode souris. Pas de synchronisation par le temps. Les sites qui refusent l'intégration ne se chargeront pas.</span></td></tr>
+    </tbody>
+  </table>
+  <h3><span class="en">What is always refused</span><span class="fr">Ce qui est toujours refusé</span></h3>
+  <ul>
+    <li class="en">Anything that is not <code>http://</code> or <code>https://</code>; links containing spaces or a username/password (<code>user@host</code>).</li><li class="fr">Tout ce qui n'est pas <code>http://</code> ou <code>https://</code> ; les liens contenant des espaces ou un identifiant/mot de passe (<code>user@host</code>).</li>
+    <li class="en">Literal IP addresses, <code>localhost</code> and names ending in <code>.local</code>, <code>.internal</code> or <code>.lan</code>. This is a hostname filter, not a DNS or redirect check.</li><li class="fr">Les adresses IP littérales, <code>localhost</code> et les noms en <code>.local</code>, <code>.internal</code> ou <code>.lan</code>. Il s'agit d'un filtre de noms d'hôtes, sans vérification des DNS ou redirections.</li>
+    <li class="en">Links longer than <code>Config.Limits.maxUrlLength</code> and domains listed in <code>Config.BlacklistedHosts</code>.</li><li class="fr">Les liens plus longs que <code>Config.Limits.maxUrlLength</code> et les domaines listés dans <code>Config.BlacklistedHosts</code>.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ KEYS -->
+<section id="keys">
+  <h2><span class="en">Remote keys</span><span class="fr">Touches de la télécommande</span></h2>
+  <p class="en">Click the keys with the mouse or use the keyboard. When the TV is <b>off</b>, only POWER works.</p>
+  <p class="fr">Cliquez les touches à la souris ou utilisez le clavier. Quand la télé est <b>éteinte</b>, seule la touche POWER fonctionne.</p>
+  <table>
+    <thead><tr><th><span class="en">Key</span><span class="fr">Touche</span></th><th><span class="en">Keyboard</span><span class="fr">Clavier</span></th><th><span class="en">What it does</span><span class="fr">Effet</span></th></tr></thead>
+    <tbody>
+      <tr><td>POWER</td><td><kbd>P</kbd></td><td><span class="en">Turns the TV on or off. On with nothing playing, it opens the home screen.</span><span class="fr">Allume ou éteint la télé. Allumée sans lecture, elle ouvre l'écran d'accueil.</span></td></tr>
+      <tr><td>0 – 9</td><td><kbd>0</kbd>…<kbd>9</kbd></td><td><span class="en">Tune a channel number. <kbd>OK</kbd> validates immediately.</span><span class="fr">Règle un numéro de chaîne. <kbd>OK</kbd> valide tout de suite.</span></td></tr>
+      <tr><td>CH +/−</td><td><kbd>PageUp</kbd> / <kbd>PageDown</kbd></td><td><span class="en">Next or previous channel (loops around).</span><span class="fr">Chaîne suivante ou précédente (boucle).</span></td></tr>
+      <tr><td>VOL +/−</td><td><kbd>+</kbd> / <kbd>−</kbd></td><td><span class="en">Volume up or down by <code>Config.Keys.volumeStep</code>.</span><span class="fr">Volume plus ou moins de <code>Config.Keys.volumeStep</code>.</span></td></tr>
+      <tr><td>MUTE</td><td><kbd>M</kbd></td><td><span class="en">Mute or unmute the TV for everybody.</span><span class="fr">Coupe ou rétablit le son de la télé pour tout le monde.</span></td></tr>
+      <tr><td>i</td><td><kbd>I</kbd></td><td><span class="en">Shows the channel or the title on the TV for a moment.</span><span class="fr">Affiche un instant la chaîne ou le titre sur la télé.</span></td></tr>
+      <tr><td>MENU / HOME</td><td><kbd>Home</kbd></td><td><span class="en">Opens the app screen. MENU closes an open menu.</span><span class="fr">Ouvre l'écran des applications. MENU ferme un menu ouvert.</span></td></tr>
+      <tr><td>GUIDE</td><td><kbd>G</kbd></td><td><span class="en">Opens the channel list.</span><span class="fr">Ouvre la liste des chaînes.</span></td></tr>
+      <tr><td>BACK / EXIT</td><td><kbd>Backspace</kbd></td><td><span class="en">BACK goes from a sub-page to the home screen, then closes the menu. EXIT closes the menu.</span><span class="fr">BACK passe d'une sous-page à l'accueil puis ferme le menu. EXIT ferme le menu.</span></td></tr>
+      <tr><td><span class="en">Arrows</span><span class="fr">Flèches</span></td><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></td><td><span class="en">In a menu: move the selection (apps: left/right, channels: up/down). Playing a video: left/right seek ∓10 s, up/down change volume. On a web page: up/down scroll.</span><span class="fr">Dans un menu : déplacent la sélection (applications : gauche/droite, chaînes : haut/bas). Pendant une vidéo : gauche/droite avancent ∓10 s, haut/bas changent le volume. Sur une page web : haut/bas défilent.</span></td></tr>
+      <tr><td>OK</td><td><kbd>Enter</kbd></td><td><span class="en">Validates a channel number, opens the selected app or channel, or toggles pause when a video is playing.</span><span class="fr">Valide un numéro de chaîne, ouvre l'application ou la chaîne sélectionnée, ou bascule la pause pendant une vidéo.</span></td></tr>
+      <tr><td><span class="en">Red · Green · Yellow · Blue</span><span class="fr">Rouge · Vert · Jaune · Bleu</span></td><td>—</td><td><span class="en">Open the app set in <code>Config.ColorKeys</code> (YouTube, Twitch, Channels, Browser by default).</span><span class="fr">Ouvrent l'application définie dans <code>Config.ColorKeys</code> (YouTube, Twitch, Chaînes, Navigateur par défaut).</span></td></tr>
+      <tr><td><span class="en">Source</span><span class="fr">Source</span></td><td><kbd>Tab</kbd></td><td><span class="en">Opens or closes the address panel.</span><span class="fr">Ouvre ou ferme le panneau d'adresse.</span></td></tr>
+      <tr><td><span class="en">Close</span><span class="fr">Fermer</span></td><td><kbd>Esc</kbd></td><td><span class="en">Closes the address panel, then the remote. In mouse mode it returns to the remote.</span><span class="fr">Ferme le panneau d'adresse puis la télécommande. En mode souris, revient à la télécommande.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ COMMANDS -->
+<section id="commands">
+  <h2><span class="en">Commands &amp; permissions</span><span class="fr">Commandes et permissions</span></h2>
+  <table>
+    <thead><tr><th><span class="en">Command</span><span class="fr">Commande</span></th><th><span class="en">Who</span><span class="fr">Qui</span></th><th><span class="en">Purpose</span><span class="fr">Rôle</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>/tv</code></td><td><span class="en">Players</span><span class="fr">Joueurs</span></td><td><span class="en">Opens the remote of the nearest TV. Name set by <code>Config.Command</code>; disable with <code>Config.Access.command = false</code>.</span><span class="fr">Ouvre la télécommande de la télé la plus proche. Nom défini par <code>Config.Command</code> ; désactivable avec <code>Config.Access.command = false</code>.</span></td></tr>
+      <tr><td><code>/streamermode</code></td><td><span class="en">Players</span><span class="fr">Joueurs</span></td><td><span class="en">Mutes all TV audio for the player only.</span><span class="fr">Coupe le son de toutes les télés pour le joueur uniquement.</span></td></tr>
+      <tr><td><code>/tvcalib</code></td><td><span class="en">Local client</span><span class="fr">Client local</span></td><td><span class="en">Calibrates a custom screen locally and prints the line to paste (see <a href="#screens">Custom screens</a>).</span><span class="fr">Calibre un écran perso localement et affiche la ligne à coller (voir <a href="#screens">Écrans personnalisés</a>).</span></td></tr>
+    </tbody>
+  </table>
+  <h3><span class="en">Permissions (ACE)</span><span class="fr">Permissions (ACE)</span></h3>
+  <table>
+    <thead><tr><th>ACE</th><th><span class="en">Needed when</span><span class="fr">Nécessaire quand</span></th><th>server.cfg</th></tr></thead>
+    <tbody>
+      <tr><td><code>/tvcalib</code></td><td><span class="en">Client-local tool; no server ACE is enforced by this implementation.</span><span class="fr">Outil local au client ; cette implémentation n'impose pas d'ACE serveur.</span></td><td><a href="https://github.com/citizenfx/fivem/blob/master/ext/native-decls/RegisterCommand.md">FiveM RegisterCommand reference</a></td></tr>
+      <tr><td><code>scrappydev_tv.control</code></td><td><span class="en">Only with <code>Config.Permissions.enabled = true</code>: lets a player control TVs without a matching job.</span><span class="fr">Seulement avec <code>Config.Permissions.enabled = true</code> : permet à un joueur de contrôler les télés sans métier correspondant.</span></td><td><code>add_ace group.admin scrappydev_tv.control allow</code></td></tr>
+    </tbody>
+  </table>
+  <p class="note en">Never grant these permissions to everybody. With permissions enabled and no framework, only the ACE can grant access.</p>
+  <p class="note fr">N'accordez jamais ces permissions à tout le monde. Avec les permissions activées et sans framework, seul l'ACE peut donner l'accès.</p>
+</section>
+
+<!-- ============================================================ HOW IT WORKS -->
+<section id="howitworks">
+  <h2><span class="en">How it works</span><span class="fr">Fonctionnement</span></h2>
+  <div class="cols">
+    <div class="col"><b><span class="en">One clock per TV</span><span class="fr">Une horloge par télé</span></b><p class="en">The server stores when a video started. Each client computes the current second from that, so a player arriving late joins at the right moment. Pause and seek simply move the start time.</p><p class="fr">Le serveur garde l'heure de départ d'une vidéo. Chaque client en déduit la seconde courante : un joueur qui arrive en retard rejoint au bon moment. Pause et avance déplacent simplement l'heure de départ.</p></div>
+    <div class="col"><b><span class="en">Server decides</span><span class="fr">Le serveur décide</span></b><p class="en">Clients only ask. The server checks distance, permission, item, link and rate, then updates the state and tells the nearby players.</p><p class="fr">Les clients ne font que demander. Le serveur vérifie la distance, la permission, l'objet, le lien et la cadence, puis met à jour l'état et prévient les joueurs proches.</p></div>
+    <div class="col"><b><span class="en">One driver at a time</span><span class="fr">Un pilote à la fois</span></b><p class="en">A player in mouse mode holds the TV for <code>Config.Pointer.lockSeconds</code> after the last action. Others get a "TV in use" message. The hold ends when they leave mouse mode, close the remote or disconnect.</p><p class="fr">Un joueur en mode souris garde la télé <code>Config.Pointer.lockSeconds</code> après sa dernière action. Les autres reçoivent « télé occupée ». Le bail prend fin quand il quitte le mode souris, ferme la télécommande ou se déconnecte.</p></div>
+    <div class="col"><b><span class="en">Routing buckets</span><span class="fr">Routing buckets</span></b><p class="en">A TV only talks to players in the same routing bucket, so instances (apartments, interiors) never leak into each other.</p><p class="fr">Une télé ne parle qu'aux joueurs du même routing bucket : les instances (appartements, intérieurs) ne se mélangent jamais.</p></div>
+    <div class="col"><b><span class="en">Memory only</span><span class="fr">Mémoire seulement</span></b><p class="en">No database. The state of a TV lives in server memory and is lost at restart (use <code>Config.Presets</code> for TVs that must start by themselves). A TV with nothing playing and nobody nearby is forgotten; a TV that is playing stays until restart.</p><p class="fr">Pas de base de données. L'état d'une télé vit dans la mémoire du serveur et disparaît au redémarrage (utilisez <code>Config.Presets</code> pour les télés qui doivent démarrer seules). Une télé sans lecture et sans personne autour est oubliée ; une télé en lecture reste jusqu'au redémarrage.</p></div>
+    <div class="col"><b><span class="en">Light on the client</span><span class="fr">Léger côté client</span></b><p class="en">A player renders only the nearest TV in range, through one small in-game browser surface that is removed shortly after the TV is switched off.</p><p class="fr">Un joueur ne dessine que la télé la plus proche dans sa portée, via une seule petite surface de navigateur en jeu retirée peu après l'extinction de la télé.</p></div>
+  </div>
+  <h3><span class="en">Sound</span><span class="fr">Son</span></h3>
+  <p class="en">Full volume inside <code>referenceDistance</code>, then a smooth squared fade until about three quarters of the TV's range. In another interior the result is multiplied by <code>otherRoomFactor</code>. In mouse mode the volume is full. Web pages cannot be attenuated as precisely as video files.</p>
+  <p class="fr">Plein volume dans <code>referenceDistance</code>, puis une baisse douce au carré jusqu'aux trois quarts environ de la portée de la télé. Dans un autre intérieur, le résultat est multiplié par <code>otherRoomFactor</code>. En mode souris le volume est plein. Les pages web ne peuvent pas être atténuées aussi précisément que les fichiers vidéo.</p>
+</section>
+
+<!-- ============================================================ DEV API -->
+<section id="dev-api" class="dev">
+  <div class="devtag"><span class="en">For developers</span><span class="fr">Pour les développeurs</span></div>
+  <h2><span class="en">Exports</span><span class="fr">Exports</span></h2>
+  <p class="en">Use these to control TVs from your own scripts (a heist, a cinema, a shop display…). The resource must keep the name <code>scrappydev_tv</code>. <b>Server exports are trusted</b>: never wrap them in a client event without your own checks.</p>
+  <p class="fr">Utilisez-les pour piloter les télés depuis vos propres scripts (un braquage, un cinéma, une vitrine…). La ressource doit garder le nom <code>scrappydev_tv</code>. <b>Les exports serveur sont de confiance</b> : ne les exposez jamais derrière un évènement client sans vos propres contrôles.</p>
+  <h3><span class="en">Server</span><span class="fr">Serveur</span></h3>
+  <table>
+    <thead><tr><th>Export</th><th><span class="en">Returns</span><span class="fr">Retour</span></th><th><span class="en">Notes</span><span class="fr">Remarques</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>useRemote(source)</code></td><td>—</td><td><span class="en">Opens the remote on that player's client, as if they used the remote item. Call it from your own inventory's item-use code.</span><span class="fr">Ouvre la télécommande chez ce joueur, comme s'il avait utilisé l'objet télécommande. Appelez-le depuis le code d'utilisation d'objet de votre inventaire.</span></td></tr>
+      <tr><td><code>StartTelevision(coords, tvtypeid, volume, bucket, controldisabled)</code></td><td>boolean</td><td><span class="en">Creates or finds the TV at <code>coords</code> (within 2 m), turns it on, sets the volume (0–100, optional) and, with <code>controldisabled = true</code>, <b>locks</b> it so players cannot control it. <code>bucket</code> is the routing bucket (default 0). <code>tvtypeid</code> is kept for compatibility and ignored.</span><span class="fr">Crée ou trouve la télé à <code>coords</code> (dans 2 m), l'allume, règle le volume (0–100, optionnel) et, avec <code>controldisabled = true</code>, la <b>verrouille</b> pour que les joueurs ne puissent pas la contrôler. <code>bucket</code> est le routing bucket (0 par défaut). <code>tvtypeid</code> est conservé pour la compatibilité et ignoré.</span></td></tr>
+      <tr><td><code>PlayVideoOnTelevision(coords, bucket, volume, url)</code></td><td>boolean</td><td><span class="en">Plays a link on that TV (created if needed). <code>volume</code> is optional: <code>(coords, bucket, url)</code> also works. Returns false if the link is refused (invalid, blocked, too long). The link goes through the same safety checks as players' links.</span><span class="fr">Lit un lien sur cette télé (créée si besoin). <code>volume</code> est optionnel : <code>(coords, bucket, url)</code> fonctionne aussi. Retourne false si le lien est refusé (invalide, bloqué, trop long). Le lien passe les mêmes contrôles de sécurité que ceux des joueurs.</span></td></tr>
+      <tr><td><code>ChangeVolumeTelevision(coords, volume, bucket)</code></td><td>boolean</td><td><span class="en">Sets the volume (0–100) of an existing TV.</span><span class="fr">Règle le volume (0–100) d'une télé existante.</span></td></tr>
+      <tr><td><code>StopTelevision(coords, bucket)</code></td><td>boolean</td><td><span class="en">Clears the content, switches the TV off and unlocks it.</span><span class="fr">Vide le contenu, éteint la télé et la déverrouille.</span></td></tr>
+    </tbody>
+  </table>
+  <figure class="code" data-lang="lua"><figcaption><span class="file"><span class="en">Example: a cinema that plays a trailer</span><span class="fr">Exemple : un cinéma qui lance une bande-annonce</span></span><button class="copy" data-copy><span class="en">Copy</span><span class="fr">Copier</span></button></figcaption><pre><code>local screen = vec3(320.5, -590.2, 43.2)
+
+-- start, locked so players cannot change it
+exports.scrappydev_tv:StartTelevision(screen, 0, 60, 0, true)
+exports.scrappydev_tv:PlayVideoOnTelevision(screen, 0, 60, 'https://youtu.be/abcdefghijk')
+
+-- later
+exports.scrappydev_tv:StopTelevision(screen, 0)</code></pre></figure>
+  <h3><span class="en">Client</span><span class="fr">Client</span></h3>
+  <table>
+    <thead><tr><th>Export</th><th><span class="en">Returns</span><span class="fr">Retour</span></th><th><span class="en">Notes</span><span class="fr">Remarques</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>OpenTelevision()</code></td><td>—</td><td><span class="en">Opens the remote of the nearest TV (same as <code>/tv</code>, respects the item requirement).</span><span class="fr">Ouvre la télécommande de la télé la plus proche (comme <code>/tv</code>, respecte l'obligation d'objet).</span></td></tr>
+      <tr><td><code>HasVehicleTV()</code></td><td>false</td><td><span class="en">Compatibility stub: vehicle TVs are not part of this resource.</span><span class="fr">Fonction de compatibilité : les télés de véhicule ne font pas partie de cette ressource.</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ DEV EVENTS -->
+<section id="dev-events" class="dev">
+  <div class="devtag"><span class="en">For developers</span><span class="fr">Pour les développeurs</span></div>
+  <h2><span class="en">Events</span><span class="fr">Évènements</span></h2>
+  <table>
+    <thead><tr><th><span class="en">Event</span><span class="fr">Évènement</span></th><th><span class="en">Side</span><span class="fr">Côté</span></th><th><span class="en">Notes</span><span class="fr">Remarques</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>scrappydev_tv:client:useRemote</code></td><td>client</td><td><span class="en">Opens the remote as an item use (the item check is already done). Used by the ox_inventory item definition.</span><span class="fr">Ouvre la télécommande comme une utilisation d'objet (le contrôle d'objet est déjà fait). Utilisé par la définition d'objet ox_inventory.</span></td></tr>
+      <tr><td><code>rtx_tv:TVRemote</code></td><td>client</td><td><span class="en">Compatibility event: opens the remote like <code>/tv</code>. Lets old scripts that triggered it keep working.</span><span class="fr">Évènement de compatibilité : ouvre la télécommande comme <code>/tv</code>. Permet à d'anciens scripts qui le déclenchaient de continuer à fonctionner.</span></td></tr>
+    </tbody>
+  </table>
+  <p class="note en">All other <code>scrappydev_tv:server:*</code> and <code>scrappydev_tv:client:*</code> events are internal. Do not trigger them from other scripts: their arguments are validated and may change between versions.</p>
+  <p class="note fr">Tous les autres évènements <code>scrappydev_tv:server:*</code> et <code>scrappydev_tv:client:*</code> sont internes. Ne les déclenchez pas depuis d'autres scripts : leurs arguments sont validés et peuvent changer d'une version à l'autre.</p>
+</section>
+
+<!-- ============================================================ DEV ARCH -->
+<section id="dev-arch" class="dev">
+  <div class="devtag"><span class="en">For developers</span><span class="fr">Pour les développeurs</span></div>
+  <h2><span class="en">Architecture &amp; safety</span><span class="fr">Architecture et sécurité</span></h2>
+  <table>
+    <thead><tr><th><span class="en">Part</span><span class="fr">Partie</span></th><th><span class="en">Role</span><span class="fr">Rôle</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>server/main.lua</code></td><td><span class="en">Authoritative state of every TV (link, clock, volume, menu, controller), validation, rate limits, exports.</span><span class="fr">État de référence de chaque télé (lien, horloge, volume, menu, pilote), validation, limites de cadence, exports.</span></td></tr>
+      <tr><td><code>shared/urls.lua</code></td><td><span class="en">Link parsing and safety checks, classification (YouTube, media, image, web).</span><span class="fr">Analyse et contrôle des liens, classification (YouTube, média, image, web).</span></td></tr>
+      <tr><td><code>client/main.lua</code></td><td><span class="en">TV detection, drawing the screen, audio distance, remote and mouse mode, target and spawned props.</span><span class="fr">Détection des télés, dessin de l'écran, distance audio, télécommande et mode souris, target et props créés.</span></td></tr>
+      <tr><td><code>client/bridge.lua · server/bridge.lua</code></td><td><span class="en">Framework adapters: job, character name, item check, usable item, notifications.</span><span class="fr">Adaptateurs de framework : métier, nom du personnage, contrôle d'objet, objet utilisable, notifications.</span></td></tr>
+      <tr><td><code>html/ui</code></td><td><span class="en">The remote and mouse-mode interface (NUI).</span><span class="fr">L'interface de la télécommande et du mode souris (NUI).</span></td></tr>
+      <tr><td><code>html/player.*</code></td><td><span class="en">The page drawn on the TV: player for YouTube, video, audio, images, on-screen menus and overlays.</span><span class="fr">La page dessinée sur la télé : lecteur YouTube, vidéo, audio, images, menus et affichages à l'écran.</span></td></tr>
+    </tbody>
+  </table>
+  <h3><span class="en">What the server enforces</span><span class="fr">Ce que le serveur impose</span></h3>
+  <ul>
+    <li class="en"><b>Distance</b>: a request is refused if the player is further than the TV's range plus a small margin (8 m).</li><li class="fr"><b>Distance</b> : une demande est refusée si le joueur est plus loin que la portée de la télé plus une petite marge (8 m).</li>
+    <li class="en"><b>Who</b>: permission (ACE or job) and, if required, the remote item, are checked on <b>every</b> action.</li><li class="fr"><b>Qui</b> : la permission (ACE ou métier) et, si exigé, l'objet télécommande sont vérifiés à <b>chaque</b> action.</li>
+    <li class="en"><b>What</b>: only whitelisted keys are accepted; links are parsed and filtered; volume is clamped to 0–100; seek values are bounded; mouse coordinates are clamped to the screen.</li><li class="fr"><b>Quoi</b> : seules les touches autorisées sont acceptées ; les liens sont analysés et filtrés ; le volume est borné à 0–100 ; les valeurs d'avance sont bornées ; les coordonnées de souris sont limitées à l'écran.</li>
+    <li class="en"><b>How often</b>: cooldown between link changes, a key delay (80 ms), a volume delay (120 ms), a token bucket for mouse events and a per-minute cap on TVs a player can create.</li><li class="fr"><b>À quelle cadence</b> : délai entre changements de lien, délai de touche (80 ms), délai de volume (120 ms), un seau à jetons pour les évènements souris et un plafond par minute de télés créées par joueur.</li>
+    <li class="en"><b>Where</b>: state is only sent to subscribed players in the same routing bucket.</li><li class="fr"><b>Où</b> : l'état n'est envoyé qu'aux joueurs abonnés du même routing bucket.</li>
+  </ul>
+  <p class="note en">The NUI pages are readable files (Asset Escrow does not encrypt NUI). Never put secrets in <code>config.lua</code> links: anything players can play is visible to them.</p>
+  <p class="note fr">Les pages NUI sont des fichiers lisibles (l'Asset Escrow ne chiffre pas la NUI). Ne mettez jamais de secret dans les liens de <code>config.lua</code> : tout ce que les joueurs peuvent lire leur est visible.</p>
+  <p class="note en">Compatibility: if you migrate from another TV resource, stop it first. Two resources registering the same GTA render targets at once will conflict.</p>
+  <p class="note fr">Compatibilité : si vous migrez depuis une autre ressource de télé, arrêtez-la d'abord. Deux ressources qui utilisent les mêmes cibles de rendu GTA en même temps entrent en conflit.</p>
+</section>
+
+<!-- ============================================================ FAQ -->
+<section id="faq">
+  <h2><span class="en">Troubleshooting</span><span class="fr">Dépannage</span></h2>
+  <input id="search" type="search" aria-label="Search">
+  <div id="faqlist">
+    <details><summary><span class="en">/tv says there is no television nearby</span><span class="fr">/tv indique qu'il n'y a pas de télévision proche</span></summary><p class="en">Stand within the control range (15 m by default) of a prop from <a href="#models">the supported list</a>. For a TV from a map or an MLO, declare a <a href="#screens">custom screen</a> at its coordinates.</p><p class="fr">Placez-vous dans la portée de contrôle (15 m par défaut) d'un prop de <a href="#models">la liste gérée</a>. Pour une télé de map ou de MLO, déclarez un <a href="#screens">écran personnalisé</a> à ses coordonnées.</p></details>
+    <details><summary><span class="en">The resource does not start / dependency not found</span><span class="fr">La ressource ne démarre pas / dépendance introuvable</span></summary><p class="en">Check that <code>ox_lib</code> exists and starts <b>before</b> <code>scrappydev_tv</code>, and that the folder is named exactly <code>scrappydev_tv</code>.</p><p class="fr">Vérifiez que <code>ox_lib</code> existe et démarre <b>avant</b> <code>scrappydev_tv</code>, et que le dossier s'appelle exactement <code>scrappydev_tv</code>.</p></details>
+    <details><summary><span class="en">The screen stays black</span><span class="fr">L'écran reste noir</span></summary><p class="en">Open the F8 console for an error. Check that the TV is switched on (POWER key) and that something is playing. Make sure no other TV resource is running at the same time. Move away and come back: the screen is rebuilt when you re-enter the range.</p><p class="fr">Ouvrez la console F8 pour voir une erreur. Vérifiez que la télé est allumée (touche POWER) et qu'un contenu est en lecture. Assurez-vous qu'aucune autre ressource de télé ne tourne en même temps. Éloignez-vous puis revenez : l'écran est reconstruit quand vous rentrez dans la portée.</p></details>
+    <details><summary><span class="en">A link is refused ("not valid" or "not allowed")</span><span class="fr">Un lien est refusé (« invalide » ou « interdit »)</span></summary><p class="en">"Not valid": the link is malformed, too long, or points to an IP address / local network. "Not allowed": its domain is in <code>Config.BlacklistedHosts</code>. See <a href="#links">Supported links</a>.</p><p class="fr">« Invalide » : le lien est mal formé, trop long, ou pointe vers une adresse IP / un réseau local. « Interdit » : son domaine est dans <code>Config.BlacklistedHosts</code>. Voir <a href="#links">Liens pris en charge</a>.</p></details>
+    <details><summary><span class="en">A website shows an error or a blank page</span><span class="fr">Un site affiche une erreur ou une page blanche</span></summary><p class="en">Many sites refuse to be shown inside another page, and streaming services with DRM (Netflix, Disney+…) never play. Try a direct video file, YouTube, or a site that allows embedding.</p><p class="fr">Beaucoup de sites refusent d'être affichés dans une autre page, et les services de streaming à DRM (Netflix, Disney+…) ne se lisent jamais. Essayez un fichier vidéo direct, YouTube, ou un site qui autorise l'intégration.</p></details>
+    <details><summary><span class="en">A video file does not play</span><span class="fr">Un fichier vidéo ne se lit pas</span></summary><p class="en">The link must be a direct, public file (not a page that contains a player). Use MP4 (H.264) or WebM. Files behind a login, or hosted on a site that blocks hot-linking, cannot play.</p><p class="fr">Le lien doit être un fichier direct et public (pas une page qui contient un lecteur). Utilisez du MP4 (H.264) ou du WebM. Les fichiers derrière une connexion, ou hébergés sur un site qui bloque le lien direct, ne peuvent pas se lire.</p></details>
+    <details><summary><span class="en">A live stream (.m3u8) does not start</span><span class="fr">Un flux en direct (.m3u8) ne démarre pas</span></summary><p class="en">The player loads a small library from a public CDN the first time. Check that the player's PC can reach <code>cdn.jsdelivr.net</code> and that the stream allows cross-site playback.</p><p class="fr">Le lecteur charge une petite bibliothèque depuis un CDN public la première fois. Vérifiez que le PC du joueur peut joindre <code>cdn.jsdelivr.net</code> et que le flux autorise la lecture depuis un autre site.</p></details>
+    <details><summary><span class="en">Players hear the TV through walls / too far</span><span class="fr">Les joueurs entendent la télé à travers les murs / trop loin</span></summary><p class="en">Lower <code>Config.Audio.otherRoomFactor</code> (0 = silent in other rooms) and <code>referenceDistance</code>, or reduce the TV's scan range in <code>Config.Models</code>.</p><p class="fr">Baissez <code>Config.Audio.otherRoomFactor</code> (0 = silence dans les autres pièces) et <code>referenceDistance</code>, ou réduisez la portée de détection de la télé dans <code>Config.Models</code>.</p></details>
+    <details><summary><span class="en">"TV in use" / "You are not allowed to control this television"</span><span class="fr">« Télé occupée » / « Vous ne pouvez pas contrôler cette télévision »</span></summary><p class="en">"In use": another player is in mouse mode; they release it when they close the remote, leave, or after <code>Config.Pointer.lockSeconds</code> without action. "Not allowed": <code>Config.Permissions</code> is enabled and the player has neither the ACE nor a listed job. "Locked": an export started the TV with <code>controldisabled = true</code>.</p><p class="fr">« Occupée » : un autre joueur est en mode souris ; il la libère en fermant la télécommande, en partant, ou après <code>Config.Pointer.lockSeconds</code> sans action. « Pas autorisé » : <code>Config.Permissions</code> est activé et le joueur n'a ni l'ACE ni un métier listé. « Verrouillée » : un export a démarré la télé avec <code>controldisabled = true</code>.</p></details>
+    <details><summary><span class="en">The remote item does nothing</span><span class="fr">L'objet télécommande ne fait rien</span></summary><p class="en">Check that the item exists in your inventory, that <code>Config.Access.item</code> matches its name exactly, and that you are near a TV. On ox_inventory use the definition with <code>event = 'scrappydev_tv:client:useRemote'</code>. With a custom inventory, call <code>exports.scrappydev_tv:useRemote(source)</code>.</p><p class="fr">Vérifiez que l'objet existe dans votre inventaire, que <code>Config.Access.item</code> correspond exactement à son nom et que vous êtes près d'une télé. Sur ox_inventory, utilisez la définition avec <code>event = 'scrappydev_tv:client:useRemote'</code>. Avec un inventaire personnalisé, appelez <code>exports.scrappydev_tv:useRemote(source)</code>.</p></details>
+    <details><summary><span class="en">The target eye does not appear</span><span class="fr">L'œil target n'apparaît pas</span></summary><p class="en">Set <code>Config.Access.target = true</code>, start <code>ox_target</code> before <code>scrappydev_tv</code>, and stay within <code>Config.Target.distance</code> of the TV.</p><p class="fr">Mettez <code>Config.Access.target = true</code>, démarrez <code>ox_target</code> avant <code>scrappydev_tv</code> et restez à moins de <code>Config.Target.distance</code> de la télé.</p></details>
+    <details><summary><span class="en">A color key does nothing</span><span class="fr">Une touche de couleur ne fait rien</span></summary><p class="en">Its value in <code>Config.ColorKeys</code> must be the <code>id</code> of an app in <code>Config.Apps</code>.</p><p class="fr">Sa valeur dans <code>Config.ColorKeys</code> doit être l'<code>id</code> d'une application de <code>Config.Apps</code>.</p></details>
+    <details><summary><span class="en">The channel guide is empty</span><span class="fr">Le guide des chaînes est vide</span></summary><p class="en">That is the default: add entries to <code>Config.Channels</code>.</p><p class="fr">C'est le comportement par défaut : ajoutez des entrées dans <code>Config.Channels</code>.</p></details>
+    <details><summary><span class="en">My custom screen is mirrored, too big or floating</span><span class="fr">Mon écran perso est en miroir, trop grand ou flottant</span></summary><p class="en">Calibrate it locally with <code>/tvcalib</code>, then copy the values into your configuration. See <a href="#screens">Custom screens</a>.</p><p class="fr">Calibrez-le localement avec <code>/tvcalib</code>, puis recopiez les valeurs dans la configuration. Voir <a href="#screens">Écrans personnalisés</a>.</p></details>
+    <details><summary><span class="en">Two TVs appear in the same place</span><span class="fr">Deux télés apparaissent au même endroit</span></summary><p class="en"><code>Config.SpawnProps</code> creates TVs for every player. Disable it if your map already contains a TV there.</p><p class="fr"><code>Config.SpawnProps</code> crée des télés chez chaque joueur. Désactivez-le si votre map contient déjà une télé à cet endroit.</p></details>
+    <details><summary><span class="en">The console warns about <code>Config.VersionCheck.url</code></span><span class="fr">La console avertit à propos de <code>Config.VersionCheck.url</code></span></summary><p class="en">The update notice is enabled but no address is set. Put the address you were given, or set <code>Config.VersionCheck.enabled = false</code>.</p><p class="fr">L'alerte de mise à jour est activée mais aucune adresse n'est renseignée. Indiquez l'adresse qui vous a été donnée, ou mettez <code>Config.VersionCheck.enabled = false</code>.</p></details>
+    <details><summary><span class="en">The game freezes in mouse mode</span><span class="fr">Le jeu se fige en mode souris</span></summary><p class="en">Press <kbd>Esc</kbd> to leave mouse mode. Mouse mode disables game controls on purpose until you leave it; it closes by itself if your character dies.</p><p class="fr">Appuyez sur <kbd>Échap</kbd> pour quitter le mode souris. Il désactive volontairement les commandes du jeu jusqu'à ce que vous le quittiez ; il se ferme tout seul si votre personnage meurt.</p></details>
+  </div>
+  <p class="note en">When asking for help, include your server console output, the F8 console errors, the TV model or screen id, and the link you tried.</p>
+  <p class="note fr">Pour toute demande d'aide, joignez la sortie de la console serveur, les erreurs de la console F8, le modèle de la télé ou l'id de l'écran, et le lien essayé.</p>
+</section>
+
+<!-- ============================================================ UPDATES -->
+<section id="updates">
+  <h2><span class="en">Updates</span><span class="fr">Mises à jour</span></h2>
+  <p class="en">The TV checks regularly whether a newer release exists and prints a message in the server console. It <b>only reports</b>: it never downloads or replaces files. To update:</p>
+  <p class="fr">La télé vérifie régulièrement s'il existe une version plus récente et affiche un message dans la console du serveur. Elle <b>se contente de l'indiquer</b> : elle ne télécharge ni ne remplace jamais de fichier. Pour mettre à jour :</p>
+  <ol class="flow">
+    <li><span class="en">Download the new package from <a href="https://github.com/ByYoSe/scrappydev_tv/releases">GitHub Releases</a>.</span><span class="fr">Téléchargez le nouveau paquet depuis les <a href="https://github.com/ByYoSe/scrappydev_tv/releases">releases GitHub</a>.</span></li>
+    <li><span class="en">Keep a copy of your <code>config.lua</code> and <code>locales</code> folder (they are yours).</span><span class="fr">Gardez une copie de votre <code>config.lua</code> et du dossier <code>locales</code> (ils vous appartiennent).</span></li>
+    <li><span class="en">Replace the resource folder with the new one, then put your <code>config.lua</code> back and merge any new option from the new file.</span><span class="fr">Remplacez le dossier de la ressource par le nouveau, remettez votre <code>config.lua</code> et reportez les éventuelles nouvelles options du nouveau fichier.</span></li>
+    <li><span class="en">Run <code>restart scrappydev_tv</code>.</span><span class="fr">Tapez <code>restart scrappydev_tv</code>.</span></li>
+  </ol>
+  <p class="note en">Settings: <code>Config.VersionCheck.enabled</code> (on/off), <code>url</code> (set by the author), <code>intervalMinutes</code> (default 360, minimum 30).</p>
+  <p class="note fr">Réglages : <code>Config.VersionCheck.enabled</code> (activé/désactivé), <code>url</code> (renseignée par l'auteur), <code>intervalMinutes</code> (360 par défaut, minimum 30).</p>
+  <h3>Changelog</h3>
+  <details open><summary><b>1.0.0</b> — <span class="en">first release</span><span class="fr">première version</span></summary>
+    <ul>
+      <li class="en">Synchronized TVs with a server-side clock, pause, seek and late join.</li><li class="fr">Télés synchronisées avec horloge côté serveur, pause, avance et arrivée tardive.</li>
+      <li class="en">Remote with numbers, channels, guide, apps, color keys, address panel, recent and favorite links.</li><li class="fr">Télécommande avec chiffres, chaînes, guide, applications, touches de couleur, panneau d'adresse, liens récents et favoris.</li>
+      <li class="en">Mouse mode to browse websites on the screen.</li><li class="fr">Mode souris pour naviguer sur des sites sur l'écran.</li>
+      <li class="en">YouTube, Vimeo, Dailymotion, HLS streams, video, audio and image links.</li><li class="fr">Liens YouTube, Vimeo, Dailymotion, flux HLS, vidéo, audio et image.</li>
+      <li class="en">Custom screens, presets, spawned props and live calibration with <code>/tvcalib</code>.</li><li class="fr">Écrans personnalisés, présélections, props créés et calibrage en direct avec <code>/tvcalib</code>.</li>
+      <li class="en">QBCore, QBX, ESX, ox_core and standalone; optional remote item; optional ox_target.</li><li class="fr">QBCore, QBX, ESX, ox_core et standalone ; objet télécommande optionnel ; ox_target optionnel.</li>
+      <li class="en">English and French.</li><li class="fr">Anglais et français.</li>
+    </ul>
+  </details>
+</section>
+
+<!-- ============================================================ LIMITS -->
+<section id="limits">
+  <h2><span class="en">Good to know</span><span class="fr">À savoir</span></h2>
+  <div class="cols">
+    <div class="col"><b><span class="en">DRM services</span><span class="fr">Services à DRM</span></b><p class="en">Netflix, Disney+ and similar services block playback outside their own apps. This is not a bug of the TV.</p><p class="fr">Netflix, Disney+ et les services similaires bloquent la lecture hors de leurs propres applications. Ce n'est pas un défaut de la télé.</p></div>
+    <div class="col"><b><span class="en">Websites</span><span class="fr">Sites web</span></b><p class="en">Embedded pages cannot receive arbitrary keyboard input. Use the address field; clicks and scrolling work in mouse mode.</p><p class="fr">Les pages intégrées ne reçoivent pas de saisie clavier libre. Utilisez le champ d'adresse ; les clics et le défilement fonctionnent en mode souris.</p></div>
+    <div class="col"><b><span class="en">Web page sound</span><span class="fr">Son des pages web</span></b><p class="en">Sound of a web page cannot fade with distance as precisely as video files.</p><p class="fr">Le son d'une page web ne peut pas baisser avec la distance aussi précisément que celui des fichiers vidéo.</p></div>
+    <div class="col"><b><span class="en">Content rights</span><span class="fr">Droits des contenus</span></b><p class="en">You are responsible for what is played on your server. Use content you own or are allowed to broadcast.</p><p class="fr">Vous êtes responsable de ce qui est diffusé sur votre serveur. Utilisez des contenus qui vous appartiennent ou que vous avez le droit de diffuser.</p></div>
+    <div class="col"><b><span class="en">Source code</span><span class="fr">Code source</span></b><p class="en">The GitHub release includes readable Lua and interface sources. The manifest keeps optional Asset Escrow packaging settings for separately distributed packages.</p><p class="fr">La version GitHub inclut les sources Lua et l'interface lisibles. Le manifeste conserve les réglages de packaging Asset Escrow facultatifs pour les distributions séparées.</p></div>
+    <div class="col"><b><span class="en">Third-party files</span><span class="fr">Fichiers tiers</span></b><p class="en">No third-party <code>.gfx</code> movie is included. The optional Scaleform renderer needs files you obtain and are allowed to use yourself.</p><p class="fr">Aucun film <code>.gfx</code> tiers n'est inclus. Le rendu Scaleform optionnel nécessite des fichiers que vous obtenez et avez le droit d'utiliser vous-même.</p></div>
+  </div>
+  <p class="note en">Support: open a <a href="https://github.com/ByYoSe/scrappydev_tv/issues">GitHub issue</a> with the information listed in <a href="#faq">Troubleshooting</a>. Remove secrets and private data from logs before posting.</p>
+  <p class="note fr">Support : ouvrez une <a href="https://github.com/ByYoSe/scrappydev_tv/issues">issue GitHub</a> avec les informations listées dans <a href="#faq">Dépannage</a>. Retirez les secrets et données privées des journaux avant publication.</p>
+</section>
+
+</main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

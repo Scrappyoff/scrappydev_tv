@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Scrappy.Dev TV</title>
+	<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+
+
+	<section class="scene" id="remote" hidden>
+		<div class="rig" id="rig">
+
+
+			<aside class="panel drawer" id="drawer" hidden>
+				<header class="panel-head">
+					<div class="brand">
+						<span class="brand-mark"><img src="../img/scrappydev.png" alt=""></span>
+						<span class="brand-copy">
+							<strong>Lien</strong>
+							<small>Scrappy.Dev TV</small>
+						</span>
+					</div>
+					<div class="head-actions">
+						<span class="status-pill" id="statuspill"><i></i><b id="statustext">Éteinte</b></span>
+						<button class="icon-btn" data-act="drawer" type="button" aria-label="Fermer le tiroir" title="Fermer (Tab)">
+							<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+						</button>
+					</div>
+				</header>
+
+				<div class="now" id="nowcard">
+					<div class="now-thumb">
+						<img id="nowimg" alt="" hidden>
+						<svg class="tvico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2.5"/><path d="M8 21h8M12 17v4"/></svg>
+						<div class="eq"><span></span><span></span><span></span><span></span></div>
+					</div>
+					<div class="now-copy">
+						<span class="now-label" id="nowlabel">Aucune lecture en cours</span>
+						<span class="now-title" id="nowtitle">Tape une adresse ou une recherche ci-dessous</span>
+						<span class="now-meta"><span class="now-type" id="nowtype" hidden></span><span class="now-time" id="nowtime" hidden></span></span>
+					</div>
+				</div>
+
+				<div class="transport" id="transport" hidden>
+					<button class="tbtn" data-act="seek-back" type="button" title="Reculer de 10 s"><svg viewBox="0 0 24 24"><path d="M11 6 5 12l6 6"/><path d="M19 6l-6 6 6 6"/></svg><span>10 s</span></button>
+					<button class="tbtn main" data-act="toggle-pause" type="button" id="pausebtn" title="Lecture / pause"><svg id="pauseico" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button>
+					<button class="tbtn" data-act="seek-fwd" type="button" title="Avancer de 10 s"><span>10 s</span><svg viewBox="0 0 24 24"><path d="M13 6l6 6-6 6"/><path d="M5 6l6 6-6 6"/></svg></button>
+				</div>
+
+				<label class="field-label" for="addr">Adresse ou recherche</label>
+				<div class="url-field">
+					<svg class="url-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+					<input id="addr" type="text" spellcheck="false" autocomplete="off" placeholder="youtube.com/watch?v=… ou un mot à chercher">
+					<span class="detect" id="detect" hidden></span>
+					<button class="clear-btn" id="clearbtn" type="button" aria-label="Effacer" hidden><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+				</div>
+				<div class="engines" id="engines"></div>
+				<p class="field-hint" id="hint">Colle un lien (YouTube, vidéo MP4, image, site web…) ou écris ce que tu cherches.</p>
+
+				<div class="btn-row">
+					<button class="btn primary" data-act="go" type="button"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg><span>Lancer sur la télé</span></button>
+					<button class="btn ghost" data-act="fav" id="favbtn" type="button" title="Ajouter aux favoris" aria-label="Favori"><svg viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/></svg></button>
+				</div>
+
+				<div class="chips" id="quick"></div>
+
+				<nav class="tabs">
+					<button class="tab active" data-tab="recent" type="button">Récents</button>
+					<button class="tab" data-tab="favs" type="button">Favoris</button>
+				</nav>
+				<div class="tab-body" id="tabbody"></div>
+
+				<div class="volume">
+					<button class="icon-btn" data-act="mute" type="button" title="Couper / rétablir le son"><svg id="volicon" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg></button>
+					<div class="slider-wrap"><div class="slider-fill" id="volfill"></div><input type="range" min="0" max="100" value="50" id="vol" aria-label="Volume"></div>
+					<span class="vol-value" id="volvalue">50%</span>
+				</div>
+
+				<footer class="panel-foot">
+					<button class="btn danger" data-act="stop" type="button"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg><span>Arrêter la lecture</span></button>
+				</footer>
+			</aside>
+
+
+			<div class="rc" id="rc">
+				<div class="rc-top">
+					<span class="rc-led" id="rcled"></span>
+					<span class="rc-brand">SCRAPPY.DEV</span>
+					<button class="rc-x" data-act="close" type="button" aria-label="Fermer" title="Fermer (Échap)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+				</div>
+
+				<div class="lcd" id="lcd">
+					<span class="lcd-state" id="lcdstate">ÉTEINTE</span>
+					<span class="lcd-info" id="lcdinfo">—</span>
+					<span class="lcd-vol" id="lcdvol">VOL 50</span>
+				</div>
+
+				<div class="rc-grid">
+					<button class="k" data-key="d1" type="button"><span>1</span></button>
+					<button class="k" data-key="d2" type="button"><span>2</span></button>
+					<button class="k" data-key="d3" type="button"><span>3</span></button>
+					<button class="k" data-key="d4" type="button"><span>4</span></button>
+					<button class="k" data-key="d5" type="button"><span>5</span></button>
+					<button class="k" data-key="d6" type="button"><span>6</span></button>
+					<button class="k" data-key="d7" type="button"><span>7</span></button>
+					<button class="k" data-key="d8" type="button"><span>8</span></button>
+					<button class="k" data-key="d9" type="button"><span>9</span></button>
+					<button class="k small" data-key="info" type="button" title="Infos"><span class="ital">i</span></button>
+					<button class="k" data-key="d0" type="button"><span>0</span></button>
+					<button class="k small" data-act="drawer" type="button" title="Source : saisir un lien (Tab)"><svg viewBox="0 0 24 24"><path d="M3 12h11M10 8l4 4-4 4"/><rect x="12" y="4" width="9" height="16" rx="2"/></svg></button>
+				</div>
+
+				<div class="rc-mid">
+					<div class="rocker" aria-label="Volume">
+						<button class="k" data-key="vol_up" data-rep type="button" title="Volume +"><span>+</span></button>
+						<svg class="rk-ico" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/></svg>
+						<button class="k" data-key="vol_down" data-rep type="button" title="Volume −"><span>−</span></button>
+					</div>
+					<div class="mid-col">
+						<button class="k small" data-key="menu" type="button" title="Menu"><span class="txt">MENU</span></button>
+						<button class="k small" data-key="mute" id="mutekey" type="button" title="Muet"><svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+						<button class="k small mouse" data-act="pointer" type="button" title="Mode souris : naviguer sur un site"><svg viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z"/></svg></button>
+					</div>
+					<div class="rocker" aria-label="Chaînes">
+						<button class="k" data-key="ch_up" data-rep type="button" title="Chaîne +"><span>+</span></button>
+						<span class="rk-ico p">P</span>
+						<button class="k" data-key="ch_down" data-rep type="button" title="Chaîne −"><span>−</span></button>
+					</div>
+				</div>
+
+				<div class="rc-nav">
+					<button class="k small" data-key="home" type="button" title="Accueil"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5"/><path d="M6 10.5V19h12v-8.5"/></svg></button>
+					<button class="k tall" data-key="up" data-rep type="button" title="Haut"><svg viewBox="0 0 24 24"><path d="M6 14l6-6 6 6"/></svg></button>
+					<button class="k small" data-key="guide" type="button" title="Liste des chaînes"><span class="txt">GUIDE</span></button>
+
+					<button class="k wide" data-key="left" data-rep type="button" title="Gauche"><svg viewBox="0 0 24 24"><path d="M14 6l-6 6 6 6"/></svg></button>
+					<button class="k ok" data-key="ok" type="button" title="OK"><span>OK</span></button>
+					<button class="k wide" data-key="right" data-rep type="button" title="Droite"><svg viewBox="0 0 24 24"><path d="M10 6l6 6-6 6"/></svg></button>
+
+					<button class="k small" data-key="back" type="button" title="Retour"><span class="txt">BACK</span></button>
+					<button class="k tall" data-key="down" data-rep type="button" title="Bas"><svg viewBox="0 0 24 24"><path d="M6 10l6 6 6-6"/></svg></button>
+					<button class="k small" data-key="exit" type="button" title="Quitter le menu"><span class="txt">EXIT</span></button>
+				</div>
+
+				<div class="rc-colors">
+					<button class="k color red" data-key="red" type="button" title="YouTube"></button>
+					<button class="k color green" data-key="green" type="button" title="Twitch"></button>
+					<button class="k color yellow" data-key="yellow" type="button" title="Chaînes"></button>
+					<button class="k color blue" data-key="blue" type="button" title="Navigateur"></button>
+				</div>
+
+				<div class="rc-bottom">
+					<button class="k wide2" data-act="streamer" id="streamerkey" type="button" title="Mode streamer : couper le son des télés pour toi"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg></button>
+					<button class="k power" data-key="power" id="powerkey" type="button" title="Allumer / éteindre"><svg viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 6.6a8 8 0 1 0 11.4 0"/></svg></button>
+				</div>
+
+				<div class="rc-foot">
+					<span class="model">Scrappy.Dev remote</span>
+					<span class="logo"><img src="../img/scrappydev.png" alt="">SCRAPPY.DEV</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section class="pointer" id="pointer" hidden>
+		<div class="bar" id="bar">
+			<span class="bar-brand"><img src="../img/scrappydev.png" alt=""></span>
+			<button class="bbtn" data-act="home" type="button" title="Accueil"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5"/><path d="M6 10.5V19h12v-8.5"/></svg></button>
+			<button class="bbtn" data-act="reload" type="button" title="Recharger pour tout le monde"><svg viewBox="0 0 24 24"><path d="M19 8a8 8 0 1 0 1.5 5"/><path d="M19.5 3.5V8H15"/></svg></button>
+			<div class="url-field bar-field">
+				<svg class="url-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+				<input id="paddr" type="text" spellcheck="false" autocomplete="off" placeholder="Adresse ou recherche, puis Entrée">
+				<span class="detect" id="pdetect" hidden></span>
+			</div>
+			<select id="pengine" class="engine-select" aria-label="Moteur de recherche"></select>
+			<button class="bbtn go" data-act="pgo" type="button" title="Aller"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+			<span class="bar-sep"></span>
+			<button class="bbtn" data-act="pointer-close" type="button" title="Retour à la télécommande (Échap)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 21h8"/></svg><span>Télécommande</span></button>
+			<button class="bbtn danger" data-act="close" type="button" title="Tout fermer"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+		</div>
+
+		<div class="viewport" id="stage">
+			<div class="stage-empty" id="stageempty">
+				<img src="../img/scrappydev.png" alt="">
+				<strong>Aucun contenu sur l'écran</strong>
+				<span>Tape une adresse ou une recherche dans la barre du haut.</span>
+			</div>
+			<div class="cursor" id="cursor" hidden><svg viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z"/></svg></div>
+		</div>
+
+		<div class="hintbar" id="hintbar">
+			<span><kbd>Clic</kbd> cliquer</span>
+			<span><kbd>Molette</kbd> défiler</span>
+			<span><kbd>Échap</kbd> retour</span>
+			<span class="pilot" id="pilot"></span>
+		</div>
+	</section>
+
+	<div class="toasts" id="toasts"></div>
+	<script src="../i18n.js"></script>
+	<script src="ui.js"></script>
+</body>
+</html>

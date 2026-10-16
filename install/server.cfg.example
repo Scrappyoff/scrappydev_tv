@@ -1,0 +1,10 @@
+# Start order matters: library first, then your framework / inventory / target, then the TV.
+ensure ox_lib
+# ensure ox_target        # only if Config.Access.target = true
+# ensure ox_inventory     # or qb-inventory / your ESX inventory (only if you use the remote item)
+ensure scrappydev_tv
+
+# Optional: restrict who can control TVs (Config.Permissions.enabled = true).
+# add_ace group.admin scrappydev_tv.control allow
+
+# /tvcalib is a client-local calibration tool; it does not enforce a server ACE.

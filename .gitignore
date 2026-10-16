@@ -1,0 +1,31 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Local tooling, caches and release output
+.codex/
+.agents/
+node_modules/
+__pycache__/
+.venv/
+.cache/
+.release/
+*.log
+*.zip
+*.bak
+*.tmp
+
+# Private server configuration (the install example remains tracked)
+server.cfg

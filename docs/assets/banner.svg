@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title desc">
+  <title id="title">Scrappy.Dev TV</title>
+  <desc id="desc">Télévisions synchronisées pour FiveM. Un écran, une expérience partagée.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#10111b"/><stop offset="1" stop-color="#191421"/></linearGradient>
+    <linearGradient id="accent" x2="1" y2="1"><stop stop-color="#ffad55"/><stop offset="1" stop-color="#ff4257"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity=".035"/></pattern>
+  </defs>
+  <rect width="1280" height="360" rx="24" fill="url(#bg)"/>
+  <rect width="1280" height="360" rx="24" fill="url(#grid)"/>
+  <circle cx="1120" cy="160" r="250" fill="#ff4257" opacity=".04"/>
+  <circle cx="1120" cy="160" r="180" fill="#ff4257" opacity=".04"/>
+  <rect x="64" y="55" width="176" height="28" rx="14" fill="#ff9c49" fill-opacity=".12"/>
+  <circle cx="81" cy="69" r="4" fill="#ffad55"/>
+  <text x="94" y="74" font-family="Segoe UI,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="2" fill="#ffbd7b">FIVEM RESOURCE</text>
+  <text x="62" y="157" font-family="Segoe UI,Arial,sans-serif" font-size="65" font-weight="800" letter-spacing="-2" fill="#f5f5f8">SCRAPPY<tspan fill="#ffad55">.DEV</tspan> TV</text>
+  <text x="65" y="204" font-family="Segoe UI,Arial,sans-serif" font-size="23" fill="#d4cfdd">Un écran. Une expérience partagée.</text>
+  <text x="65" y="257" font-family="Segoe UI,Arial,sans-serif" font-size="14" letter-spacing="1.5" fill="#a6a0b4">SYNCHRONISATION  /  TÉLÉCOMMANDE  /  NAVIGATION WEB</text>
+  <path d="M64 304H710" stroke="#ffffff" stroke-opacity=".1"/>
+  <text x="65" y="330" font-family="Segoe UI,Arial,sans-serif" font-size="12" fill="#938c9f">QBCore · QBX · ESX · ox_core · Standalone</text>
+  <g transform="translate(895 87)">
+    <rect x="0" y="0" width="266" height="166" rx="20" fill="#0b0b12" stroke="url(#accent)" stroke-width="3"/>
+    <rect x="13" y="13" width="240" height="140" rx="11" fill="#ffad55" fill-opacity=".035"/>
+    <path d="m112 53 55 30-55 31Z" fill="url(#accent)"/>
+    <path d="M133 167v25m-51 3h102" stroke="#b5a1ae" stroke-width="5" stroke-linecap="round"/>
+    <rect x="224" y="107" width="48" height="107" rx="13" fill="#201b28" stroke="#6b4a58" stroke-width="2" transform="rotate(12 248 160)"/>
+    <g transform="rotate(12 248 160)">
+      <circle cx="248" cy="124" r="5" fill="#ff4257"/>
+      <circle cx="248" cy="149" r="12" fill="none" stroke="#a08794" stroke-width="2"/>
+      <circle cx="248" cy="149" r="4" fill="#ffad55"/>
+      <path d="M239 176h18m-18 12h18" stroke="#a08794" stroke-width="3" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

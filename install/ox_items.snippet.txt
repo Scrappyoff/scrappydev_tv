@@ -1,0 +1,9 @@
+-- Add this entry INSIDE the table returned by ox_inventory/data/items.lua.
+-- Copy install/images/tv_remote.png into ox_inventory/web/images.
+-- The remote is optional: it is only needed when Config.Access.itemRequired = true,
+-- or if you simply want players to open the remote from their inventory.
+['tv_remote'] = {
+    label = "TV Remote", weight = 100, stack = true, close = true, consume = 0,
+    description = "Controls the television next to you.",
+    client = { image = 'tv_remote.png', event = 'scrappydev_tv:client:useRemote' },
+},

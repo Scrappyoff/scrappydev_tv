@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Scrappy.Dev TV — lecteur</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="player.css">
+</head>
+<body>
+
+
+	<div class="layer" id="ytlayer" hidden><div id="ytmount"></div></div>
+
+
+	<div class="layer" id="medialayer" hidden>
+		<video id="media" playsinline preload="auto"></video>
+		<div class="audio-art" id="audioart" hidden>
+			<img src="img/scrappydev.png" alt="">
+			<div class="eq"><span></span><span></span><span></span><span></span><span></span></div>
+		</div>
+	</div>
+
+
+	<div class="layer" id="imagelayer" hidden><img id="picture" alt=""></div>
+
+
+	<div class="layer idle" id="idle">
+		<div class="glow"></div>
+		<img src="img/scrappydev.png" alt="">
+		<strong>Scrappy.Dev TV</strong>
+		<span>Appuie sur MENU</span>
+	</div>
+
+
+	<div class="menu" id="menu" hidden>
+		<header class="menu-head">
+			<img src="img/scrappydev.png" alt="">
+			<div><strong>Scrappy.Dev TV</strong><span id="menutitle">Accueil</span></div>
+		</header>
+		<div class="menu-body" id="menubody"></div>
+		<footer class="menu-hints" id="menuhints"></footer>
+	</div>
+
+	<div class="osd" id="osd">
+		<div class="osd-volume" id="osdvolume" hidden>
+			<svg id="osdvolicon" viewBox="0 0 24 24"></svg>
+			<div class="bar"><i id="osdvolfill"></i></div>
+			<b id="osdvolnum">0</b>
+		</div>
+		<div class="osd-channel" id="osdchannel" hidden><b id="osdchnum"></b><span id="osdchname"></span></div>
+		<div class="osd-info" id="osdinfo" hidden><em id="osdinnum"></em><div><strong id="osdintitle"></strong><span id="osdinsub"></span></div></div>
+		<div class="osd-toast" id="osdtoast" hidden></div>
+	</div>
+
+	<div class="layer off" id="offlayer" hidden></div>
+
+	<div class="spinner" id="spinner" hidden><i></i></div>
+	<div class="notice" id="notice" hidden><strong id="noticetitle"></strong><span id="noticetext"></span></div>
+
+	<script src="i18n.js"></script>
+	<script src="player.js"></script>
+</body>
+</html>

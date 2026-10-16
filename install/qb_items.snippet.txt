@@ -1,0 +1,3 @@
+-- Add inside QBCore.Shared.Items (QBX: your items file). Copy install/images/tv_remote.png into qb-inventory/html/images.
+-- The usable item is registered automatically by the resource when Config.Access.item = 'tv_remote'.
+tv_remote = { name='tv_remote', label="TV Remote", weight=100, type='item', image='tv_remote.png', unique=false, useable=true, shouldClose=true, description="Controls the television next to you." },
